@@ -9,7 +9,8 @@ PARSE_DATA = [
     {"pcap": "Iodine/iodine.pcap",
     "out": "Iodine/",
     "label": "1",
-    "data_type": "1"},
+    "data_type": "1",
+    "tool": "iodine"},
 
 ]
 
@@ -28,9 +29,9 @@ def write_qname(writer, label, data_type):
     return _prn
 
 
-def write_subdomain(writer, label, data_type):
+def write_subdomain(writer, label, data_type, tool):
     csvwriter = csv.writer(writer)
-    csvwriter.writerow(["label", "subdomain"])
+    csvwriter.writerow(["label", "qname"])
 
     def _prn(pkt):
         dns = pkt.lastlayer()
@@ -38,7 +39,7 @@ def write_subdomain(writer, label, data_type):
             csvwriter.writerow([label, dns.qd.qname.decode(errors="ignore").split(".")[0]])
         elif dns.qr == 0 and data_type == "1":
             if "dns-tunnel" in dns.qd.qname.decode(errors="ignore"):
-                csvwriter.writerow([label, dns.qd.qname.decode(errors="ignore").split(".")[0]])
+                csvwriter.writerow([label, dns.qd.qname.decode(errors="ignore").split(f".{tool}")[0]])
     return _prn
 
 
@@ -70,7 +71,7 @@ def main():
                 offline=data["pcap"],
                 store=False,
                 lfilter=lambda p: p.haslayer(scapy.layers.dns.DNS),
-                prn=write_subdomain(csvfile,  data["label"], data["data_type"]))
+                prn=write_subdomain(csvfile,  data["label"], data["data_type"], data["tool"]))
 
 
 if __name__ == "__main__":
