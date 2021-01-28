@@ -1,0 +1,17 @@
+---------------------------------------------------------------
+                        Version overview
+---------------------------------------------------------------
+1.0 - 
+Tunnel traffic: traffic_iodine
+Normal traffic: traffic_campus
+Normal traffic filter: Top 100 domains from Majestic-top-million-domains
+
+2.0
+Tunnel traffic: traffic_iodine
+Normal traffic: traffic_campus
+Normal traffic filter: Top 10000 domains from Majestic-top-million-domains
+
+
+
+
+
