@@ -1,0 +1,21 @@
+---------------------------------------------------------------
+                        Version overview
+---------------------------------------------------------------
+1.1 - 
+Tunnel traffic: traffic_iodine
+Normal traffic: traffic_campus
+Normal traffic filter: Top 100 domains from Majestic-top-million-domains
+Dataset features: 1. dots removed from end of normal traffic
+
+1.2 - 
+Tunnel traffic: traffic_iodine
+Normal traffic: traffic_campus
+Normal traffic filter: Top 100 domains from Majestic-top-million-domains
+Dataset features: 
+	1. dots remain at the end of normal traffic
+
+
+
+
+
+
