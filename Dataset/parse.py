@@ -6,8 +6,8 @@ import scapy.layers.dns
 import scapy.sendrecv
 
 PARSE_DATA = [
-    {"pcap": "Iodine/iodine.pcap",
-    "out": "Iodine/",
+    {"pcap": "traffic_iodine/iodine.pcap",
+    "out": "traffic_iodine/",
     "label": "1",
     "data_type": "1",
     "tool": "iodine"},

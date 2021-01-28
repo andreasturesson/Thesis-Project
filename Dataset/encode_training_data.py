@@ -121,14 +121,14 @@ def main():
     # training_data_y = encoded label
     # training_none_encoded_data = qname and label non encoded
     # dict = dictionary for encoding
-    np.save("training_data_X.npy", training_data_X)
-    np.save("training_data_y.npy", training_data_y)
-    np.save("training_none_encoded_data", training_none_encoded_data)
-    np.save("dict.npy", dict)
+    np.save("dataset_NN/training_data_X.npy", training_data_X)
+    np.save("dataset_NN/training_data_y.npy", training_data_y)
+    np.save("dataset_NN/training_none_encoded_data", training_none_encoded_data)
+    np.save("dataset_NN/dict.npy", dict)
 
     # Print example of encoding
-    dict = np.load("dict.npy", allow_pickle=True)
-    none_encoded_data = np.load("training_none_encoded_data.npy", allow_pickle=True)
+    dict = np.load("dataset_NN/dict.npy", allow_pickle=True)
+    none_encoded_data = np.load("dataset_NN/training_none_encoded_data.npy", allow_pickle=True)
     print("Printing encoding exmaple:")
     print("-"*60)
     print(f"qname before encoding: {none_encoded_data[1][1]}")
