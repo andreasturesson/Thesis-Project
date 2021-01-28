@@ -4,43 +4,43 @@ import pandas as pd
 # Inspired by https://github.com/netrack/learn/blob/master/dns/make_multilabel_sets.py
 
 TUNNEL_PATHS = [
-    "Iodine/subdomain.csv",
+    "traffic_iodine/subdomain.csv",
 ]
 
 
 NORMAL_PATHS = [
-    "normal-traffic-campus/qname20160424_195423.csv",
-    "normal-traffic-campus/qname_20160423_235403.csv",
-    "normal-traffic-campus/qname_20160424_005404.csv",
-    "normal-traffic-campus/qname_20160424_015405.csv",
-    "normal-traffic-campus/qname_20160424_025406.csv",
-    "normal-traffic-campus/qname_20160424_035407.csv",
-    "normal-traffic-campus/qname_20160424_045408.csv",
-    "normal-traffic-campus/qname_20160424_055409.csv",
-    "normal-traffic-campus/qname_20160424_065410.csv",
-    "normal-traffic-campus/qname_20160424_075411.csv",
-    "normal-traffic-campus/qname_20160424_085412.csv",
-    "normal-traffic-campus/qname_20160424_105414.csv",
-    "normal-traffic-campus/qname_20160424_115415.csv",
-    "normal-traffic-campus/qname_20160424_125416.csv",
-    "normal-traffic-campus/qname_20160424_135417.csv",
-    "normal-traffic-campus/qname_20160424_145418.csv",
+    "traffic_campus/qname20160424_195423.csv",
+    "traffic_campus/qname_20160423_235403.csv",
+    "traffic_campus/qname_20160424_005404.csv",
+    "traffic_campus/qname_20160424_015405.csv",
+    "traffic_campus/qname_20160424_025406.csv",
+    "traffic_campus/qname_20160424_035407.csv",
+    "traffic_campus/qname_20160424_045408.csv",
+    "traffic_campus/qname_20160424_055409.csv",
+    "traffic_campus/qname_20160424_065410.csv",
+    "traffic_campus/qname_20160424_075411.csv",
+    "traffic_campus/qname_20160424_085412.csv",
+    "traffic_campus/qname_20160424_105414.csv",
+    "traffic_campus/qname_20160424_115415.csv",
+    "traffic_campus/qname_20160424_125416.csv",
+    "traffic_campus/qname_20160424_135417.csv",
+    "traffic_campus/qname_20160424_145418.csv",
     # "normal-traffic-campus/qname_20160424_155419.csv",
     # "normal-traffic-campus/qname_20160424_165420.csv",
-    "normal-traffic-campus/qname_20160424_175421.csv",
-    "normal-traffic-campus/qname_20160424_185422.csv",
-    "normal-traffic-campus/qname_20160424_205424.csv",
-    "normal-traffic-campus/qname_20160424_215425.csv",
-    "normal-traffic-campus/qname_20160424_225426.csv",
-    "normal-traffic-campus/qname_20160424_235427.csv",
-    "normal-traffic-campus/qname_20160425_005428.csv",
-    "normal-traffic-campus/qname_20160425_015429.csv",
-    "normal-traffic-campus/qname_20160425_025430.csv",
-    "normal-traffic-campus/qname_20160425_035431.csv",
-    "normal-traffic-campus/qname_20160425_045432.csv",
+    "traffic_campus/qname_20160424_175421.csv",
+    "traffic_campus/qname_20160424_185422.csv",
+    "traffic_campus/qname_20160424_205424.csv",
+    "traffic_campus/qname_20160424_215425.csv",
+    "traffic_campus/qname_20160424_225426.csv",
+    "traffic_campus/qname_20160424_235427.csv",
+    "traffic_campus/qname_20160425_005428.csv",
+    "traffic_campus/qname_20160425_015429.csv",
+    "traffic_campus/qname_20160425_025430.csv",
+    "traffic_campus/qname_20160425_035431.csv",
+    "traffic_campus/qname_20160425_045432.csv",
     # "normal-traffic-campus/qname_20160425_055433.csv",
-    "normal-traffic-campus/qname_20160425_065434.csv",
-    "normal-traffic-campus/qname_20160425_215449.csv",
+    "traffic_campus/qname_20160425_065434.csv",
+    "traffic_campus/qname_20160425_215449.csv",
 ]
 
 
@@ -114,7 +114,7 @@ print(f"Complete count: {final_normal_count+final_tunnel_count}.")
 # geover-prod.do.dsp.mp.microsoft.com. -> geover-prod.do.dsp.mp.
 # This is done to prevent the model/agent recognizing that none tunnled traffic
 # by the top domains. 
-searchfor = [item + '.' for item in searchfor]
+searchfor = ['.' + item + '.' for item in searchfor]
 train_df['qname'] = train_df['qname'].str.replace('|'.join(searchfor), '')
 
 # write data to csv file
