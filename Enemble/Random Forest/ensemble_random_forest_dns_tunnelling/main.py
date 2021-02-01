@@ -6,33 +6,27 @@ import matplotlib as mp
 TEST_SIZE = 0.2
 DATASET = "../../../Dataset/dataset_ensemble/2.0/dataset_2.1.csv"
 
-
 def loadData(filename):
-    dataframe = pd.read_csv(filename, header=None)
+    dataframe = pd.read_csv(filename, header=None, low_memory=False)
     dataframe = dataframe.sample(frac=1)
     return dataframe
 
-
 def trainTestSplit(dataframe, test_size):
     if isinstance(test_size, float):
-        test_size = round(test_size * len(dataframe))
+        test_size = int(round(test_size * len(dataframe)))
 
-    index_list = dataframe.index.tolist()
-    test_index_list = random.sample(population=index_list, k=test_size)
+    data_list = dataframe.values.tolist()
+    testing_data = data_list[0:int(TEST_SIZE*len(data_list))]
+    training_data = data_list[int(TEST_SIZE*len(data_list)+1):len(data_list)]
 
-    testing_dataframe = dataframe.loc[test_index_list]
-    training_dataframe = dataframe.drop(test_index_list)
-
-    return training_dataframe, testing_dataframe
+    return training_data, testing_data
 
 
 def uniqueValues(rows, col):
-    return set([row[col]] for row in rows)
-
+    return set([row[col] for row in rows])
 
 def isNum(value):
     return isinstance(value, int) or isinstance(value, float)
-
 
 def classCount(rows):
     counts = {}
@@ -60,7 +54,7 @@ class dontApprove:
 def partition(rows, DontApprove):
     true_rows, false_rows = [], []
     for row in rows:
-        if DontApprove.Match(row):
+        if DontApprove.match(row):
             true_rows.append(row)
         else:
             false_rows.append(row)
@@ -134,6 +128,5 @@ def classify(row, node):
 
 if __name__ == '__main__':
     dataframe = loadData(DATASET)
-    trainTestSplit(dataframe, TEST_SIZE)
     training_data, testing_data = trainTestSplit(dataframe, TEST_SIZE)
     tree = buildTree(training_data)
