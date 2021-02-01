@@ -36,7 +36,7 @@ dataframe = pd.read_csv("training_data.csv")
 
 with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
     csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(["label", "total_character",
+    csvwriter.writerow(["total_character",
                         "letters", "numbers",
                         "special_characters", "letters_number",
                         "dots", "lowercase_letters",
@@ -48,7 +48,7 @@ with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
                         "subdomain3", "subdomain3_letters",
                         "subdomain3_numbers", "subdomain3_special",
                         "subdomain4", "subdomain4_letters",
-                        "subdomain4_numbers", "subdomain4_special"])
+                        "subdomain4_numbers", "subdomain4_special", "label"])
 
     for row in dataframe.itertuples():
         label, qname = "", "",
@@ -140,7 +140,7 @@ with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
             if(idx == 4):
                 subdomain4 = len(subdomain)
 
-        csvwriter.writerow([label, total_character,
+        csvwriter.writerow([total_character,
                             lowercase_letters+uppercase_letters,
                             numbers, special_characters,
                             lowercase_letters+uppercase_letters+numbers,
@@ -152,4 +152,4 @@ with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
                             subdomain2_special, subdomain3, subdomain3_letters,
                             subdomain3_numbers, subdomain3_special,
                             subdomain4, subdomain4_letters, subdomain4_numbers,
-                            subdomain4_special])
+                            subdomain4_special, label])
