@@ -2,13 +2,15 @@ import numpy as np
 import pandas as pd
 import random
 import matplotlib as mp
+from tqdm import tqdm
 
 TEST_SIZE = 0.2
-FOREST_SIZE = 5
+FOREST_SIZE = 100
+BOOTSTRAP_SAMPLE_SIZE = 3 # 33%
 DATASET = "../../../Dataset/dataset_ensemble/2.0/dataset_2.1.csv"
 
 def loadData(filename):
-    dataframe = pd.read_csv(filename, header=None, low_memory=False)
+    dataframe = pd.read_csv(filename, header=None,low_memory=False)
     dataframe = dataframe.sample(frac=1)
     return dataframe
 
@@ -45,7 +47,6 @@ def classCount(rows):
         counts[label] += 1
     return counts
 
-
 class dontApprove:
     def __init__(self, column, value):
         self.column = column
@@ -58,7 +59,6 @@ class dontApprove:
         else:
             return value == self.value
 
-
 def partition(rows, DontApprove):
     true_rows, false_rows = [], []
     for row in rows:
@@ -68,7 +68,6 @@ def partition(rows, DontApprove):
             false_rows.append(row)
     return true_rows, false_rows
 
-
 def giniImpurity(rows):
     counts = classCount(rows)
     impurity = 1
@@ -77,19 +76,20 @@ def giniImpurity(rows):
         impurity -= probability_of_label ** 2
     return impurity
 
-
 def informationGain(left_node, right_node, current_impurity):
     probability = float(len(left_node)) / (len(right_node))
     return current_impurity - probability * giniImpurity(left_node) - (1 - probability) * giniImpurity(right_node)
 
 # If the impurity is lower than the weight pick create a new question
 def split(rows):
+
     highest_valued_gain = 0
     highest_valued_question = None
     current_impurity = giniImpurity(rows)
     number_of_features = len(rows[0])-1
 
-    for columns in range(number_of_features):
+    for columns in tqdm(range(number_of_features)):
+
         values = set([row[columns] for row in rows])
         for value in values:
             question = dontApprove(columns, value)
@@ -123,6 +123,7 @@ def buildTree(rows):
     return DecisionNode(question, true_branch, false_branch)
 
 #fit function
+
 def classify(row, node):
     if isinstance(node, Leaf):
         return node.predictions
@@ -132,26 +133,38 @@ def classify(row, node):
     else:
         return classify(row, node.false_branch)
 
-def accuracy(break_point,details, tree,testing_data):
+def accuracy(details, forest, testing_data):
     bb, cc = 0, 0
     for row in testing_data:
+        bv,gv = 0,0
         bb += 1
-
-        prediciton = list(classify(row[0:-1], tree).keys())[0]
         actual_value = row[-1]
-        if prediciton == actual_value:
+        for tree in forest:
+            prediciton = list(classify(row[0:-1], tree).keys())[0]
+
+            if int(prediciton) == 1:
+                bv += 1
+            elif int(prediciton) == 0:
+                gv += 1
+            if (details):
+                print(row[0:-1])
+                print(classify(row[0:-1], tree))
+                print("Actual: %s. Predicted: %s" %(actual_value, prediciton))
+
+        if gv >= bv:
+            prediciton = 0
+        else:
+            prediciton = 1
+        if int(prediciton) == int(actual_value):
             cc += 1
-        if (details):
-            print(row[0:-1])
-            print(classify(row[0:-1], tree))
-            print("Actual: %s. Predicted: %s" %(actual_value, prediciton))
     accuracy = cc / bb * 100
-    print("Accuracy is: %s Correct: %s False: %s" %(accuracy, cc, bb), "\n")
+    print("Accuracy is: %s Correct: %s Total: %s" %(accuracy, cc, bb), "\n")
 
 def buildForest(bootstrap_training_data, forest_size):
     forest = []
     for i in range(forest_size):
         forest.append(buildTree(bootstrap_training_data[i]))
+        print("Tree %s/s% trained" %i,forest_size)
     return forest
 
 if __name__ == '__main__':
@@ -159,9 +172,8 @@ if __name__ == '__main__':
     training_data, testing_data = trainTestSplit(dataframe, TEST_SIZE)
     bootstrap_training_data = bootstrapTrainingData(FOREST_SIZE, training_data)
     forest = buildForest(bootstrap_training_data, FOREST_SIZE)
-    
-    for i in range(FOREST_SIZE):
-        accuracy(0, False, forest[i], testing_data)
+
+    accuracy(False, forest, testing_data)
 
 
 
