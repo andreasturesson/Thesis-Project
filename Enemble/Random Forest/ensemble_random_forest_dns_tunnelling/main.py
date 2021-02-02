@@ -107,7 +107,7 @@ class DecisionNode:
 # Can fuck with values
 def buildTree(rows):
     gain, question = split(rows)
-    if gain == 0:
+    if gain == 0.2:
         return Leaf(rows)
     true_rows, false_rows = partition(rows, question)
     true_branch = buildTree(true_rows)
@@ -146,4 +146,5 @@ if __name__ == '__main__':
     dataframe = loadData(DATASET)
     training_data, testing_data = trainTestSplit(dataframe, TEST_SIZE)
     tree = buildTree(training_data)
+    accuracy(break_point=250,boolean =True)
 
