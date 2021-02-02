@@ -5,7 +5,7 @@ import matplotlib as mp
 from tqdm import tqdm
 
 TEST_SIZE = 0.2
-RANDOM_SUBSPACE = 15
+RANDOM_SUBSPACE = 20
 FOREST_SIZE = 5
 BOOTSTRAP_SAMPLE_SIZE = 0.333
 DATASET = "../../../../Dataset/dataset_ensemble/2.0/dataset_2.1.csv"
