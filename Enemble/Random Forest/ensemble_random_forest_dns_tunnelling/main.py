@@ -4,6 +4,7 @@ import random
 import matplotlib as mp
 
 TEST_SIZE = 0.2
+FOREST_SIZE = 5
 DATASET = "../../../Dataset/dataset_ensemble/2.0/dataset_2.1.csv"
 
 def loadData(filename):
@@ -21,6 +22,13 @@ def trainTestSplit(dataframe, test_size):
 
     return training_data, testing_data
 
+# array [[33% traning_data], [33% traning_data], [33% traning_data], [33% traning_data]]
+def bootstrapTrainingData(size, training_data):
+    training_bootstrap_sampels = []
+    for i in range(size):
+        training_bootstrap_sampels.append(random.choices(training_data, k=int(len(training_data)/3)))
+
+    return training_bootstrap_sampels
 
 def uniqueValues(rows, col):
     return set([row[col] for row in rows])
@@ -104,7 +112,7 @@ class DecisionNode:
         self.true_branch = true_branch
         self.false_branch = false_branch
 
-# Can fuck with values
+# Can fuck with values # don't do it
 def buildTree(rows):
     gain, question = split(rows)
     if gain == 0:
@@ -124,7 +132,7 @@ def classify(row, node):
     else:
         return classify(row, node.false_branch)
 
-def accuracy(break_point, detailed):
+def accuracy(break_point,details, tree,testing_data):
     bb, cc = 0, 0
     for row in testing_data:
         bb += 1
@@ -133,17 +141,27 @@ def accuracy(break_point, detailed):
         actual_value = row[-1]
         if prediciton == actual_value:
             cc += 1
-        if (detailed):
+        if (details):
             print(row[0:-1])
             print(classify(row[0:-1], tree))
             print("Actual: %s. Predicted: %s" %(actual_value, prediciton))
-        if bb > break_point:
-            break;
-    accuracy = cc/ bb * 100
-    print("Accuracy is: ", accuracy)
+    accuracy = cc / bb * 100
+    print("Accuracy is: %s Correct: %s False: %s" %(accuracy, cc, bb), "\n")
+
+def buildForest(bootstrap_training_data, forest_size):
+    forest = []
+    for i in range(forest_size):
+        forest.append(buildTree(bootstrap_training_data[i]))
+    return forest
 
 if __name__ == '__main__':
     dataframe = loadData(DATASET)
     training_data, testing_data = trainTestSplit(dataframe, TEST_SIZE)
-    tree = buildTree(training_data)
+    bootstrap_training_data = bootstrapTrainingData(FOREST_SIZE, training_data)
+    forest = buildForest(bootstrap_training_data, FOREST_SIZE)
+    
+    for i in range(FOREST_SIZE):
+        accuracy(0, False, forest[i], testing_data)
+
+
 
