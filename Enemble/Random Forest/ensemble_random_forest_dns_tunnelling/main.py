@@ -98,8 +98,6 @@ class Leaf:
     def __init__(self, rows):
         self.predictions = classCount(rows)
 
-
-
 class DecisionNode:
     def __init__(self, question, true_branch, false_branch):
         self.question = question
@@ -120,6 +118,7 @@ def buildTree(rows):
 def classify(row, node):
     if isinstance(node, Leaf):
         return node.predictions
+
     if node.question.match(row):
         return classify(row, node.true_branch)
     else:
@@ -130,3 +129,19 @@ if __name__ == '__main__':
     dataframe = loadData(DATASET)
     training_data, testing_data = trainTestSplit(dataframe, TEST_SIZE)
     tree = buildTree(training_data)
+    bb = 0
+    cc = 0
+    for row in testing_data:
+        bb += 1
+        print(row[0:-1])
+        print(classify(row[0:-1], tree))
+        prediciton = list(classify(row[0:-1], tree).keys())[0]
+        actual_value = row[-1]
+
+        if prediciton == actual_value:
+            cc += 1
+        print("Actual: %s. Predicted: %s" %(actual_value, prediciton))
+        if bb > 250:
+            break;
+    accuracy = cc/ bb * 100
+    print("Accuracy is: ", accuracy)
