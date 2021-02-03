@@ -88,7 +88,7 @@ def split(rows):
     current_impurity = giniImpurity(rows)
     number_of_features = len(rows[0])-1
 
-    for columns in tqdm(range(number_of_features)):
+    for columns in range(number_of_features):
 
         values = set([row[columns] for row in rows])
         for value in values:
@@ -162,9 +162,9 @@ def accuracy(details, forest, testing_data):
 
 def buildForest(bootstrap_training_data, forest_size):
     forest = []
-    for i in range(forest_size):
+    for i in tqdm(range(forest_size)):
         forest.append(buildTree(bootstrap_training_data[i]))
-        print("Tree %s/s% trained" %i,forest_size)
+
     return forest
 
 if __name__ == '__main__':
