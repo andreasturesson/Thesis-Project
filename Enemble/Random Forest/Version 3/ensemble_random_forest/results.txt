@@ -1,0 +1,12 @@
+TEST_SIZE: 0.2 
+RANDOM_SUBSPACE: 13 
+FOREST_SIZE: 50 
+BOOTSTRAP_SAMPLE_SIZE: 0.333 
+DATASET: dataset_3.1.csv
+EPOCS: 1
+
+Accuracy: [75.48312722699644]
+Accuracy worst: 75.48312722699644
+Accuracy best: 75.48312722699644
+Accuracy average: 75.48312722699644
+------------------------------------------------------------------------
