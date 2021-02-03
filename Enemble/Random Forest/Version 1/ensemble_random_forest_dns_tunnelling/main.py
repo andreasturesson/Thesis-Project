@@ -10,7 +10,7 @@ BOOTSTRAP_SAMPLE_SIZE = 3 # 33%
 DATASET = "dataset_3.1.csv"
 
 def loadData(filename):
-    dataframe = pd.read_csv(filename, header=None,low_memory=False)
+    dataframe = pd.read_csv(filename,low_memory=False)
     dataframe = dataframe.sample(frac=1)
     return dataframe
 
