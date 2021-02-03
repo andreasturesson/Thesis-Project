@@ -5,9 +5,9 @@ import matplotlib as mp
 from tqdm import tqdm
 
 TEST_SIZE = 0.2
-FOREST_SIZE = 100
+FOREST_SIZE = 50
 BOOTSTRAP_SAMPLE_SIZE = 3 # 33%
-DATASET = "../../../Dataset/dataset_ensemble/2.0/dataset_2.1.csv"
+DATASET = "dataset_3.1.csv"
 
 def loadData(filename):
     dataframe = pd.read_csv(filename, header=None,low_memory=False)
