@@ -5,12 +5,12 @@ import matplotlib as mp
 from tqdm import tqdm
 
 TEST_SIZE = 0.2
-FOREST_SIZE = 100
+FOREST_SIZE = 50
 BOOTSTRAP_SAMPLE_SIZE = 3 # 33%
-DATASET = "../../../Dataset/dataset_ensemble/2.0/dataset_2.1.csv"
+DATASET = "dataset_3.1.csv"
 
 def loadData(filename):
-    dataframe = pd.read_csv(filename, header=None,low_memory=False)
+    dataframe = pd.read_csv(filename,low_memory=False)
     dataframe = dataframe.sample(frac=1)
     return dataframe
 
@@ -88,7 +88,7 @@ def split(rows):
     current_impurity = giniImpurity(rows)
     number_of_features = len(rows[0])-1
 
-    for columns in tqdm(range(number_of_features)):
+    for columns in range(number_of_features):
 
         values = set([row[columns] for row in rows])
         for value in values:
@@ -162,9 +162,9 @@ def accuracy(details, forest, testing_data):
 
 def buildForest(bootstrap_training_data, forest_size):
     forest = []
-    for i in range(forest_size):
+    for i in tqdm(range(forest_size)):
         forest.append(buildTree(bootstrap_training_data[i]))
-        print("Tree %s/s% trained" %i,forest_size)
+
     return forest
 
 if __name__ == '__main__':
