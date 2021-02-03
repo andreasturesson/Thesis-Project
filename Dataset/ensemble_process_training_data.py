@@ -34,6 +34,9 @@ def charCheck(input_char):
 
 dataframe = pd.read_csv("training_data.csv")
 
+if 'family' in dataframe.columns:
+    dataframe.to_csv("dataset_ensemble/family.csv", sep=",", index=False, columns=["family"])
+
 with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
     csvwriter = csv.writer(csvfile)
     csvwriter.writerow(["total_character",
