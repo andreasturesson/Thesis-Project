@@ -40,8 +40,9 @@ class Data(object):
             rdr = csv.reader(f, delimiter=',', quotechar='"')
             for row in rdr:
                 txt = ""
-                for s in row[1:]:
-                    txt = txt + " " + re.sub("^\s*(.-)\s*$", "%1", s).replace("\\n", "\n")
+                for s in row[1]:
+                    txt = txt + re.sub("^\s*(.-)\s*$", "%1", s).replace("\\n", "\n")
+                    #txt = txt + " " + re.sub("^\s*(.-)\s*$", "%1", s).replace("\\n", "\n")
                 if row[0] != "label":
                     data.append((int(row[0]), txt))  # format: (label, text)
         self.data = np.array(data)[:self.data_size]
