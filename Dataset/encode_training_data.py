@@ -80,8 +80,9 @@ class Data(object):
         classes = []
         for c, s in batch_texts:
             batch_indices.append(self.str_to_indexes(s))
-            c = int(c) - 1
-            classes.append(one_hot[c])
+            #c = int(c) - 1
+            #classes.append(one_hot[c])
+            classes.append(c)
         return np.asarray(batch_indices, dtype='int64'), np.asarray(classes)
 
     def str_to_indexes(self, s):
@@ -132,11 +133,11 @@ def main():
     none_encoded_data = np.load("dataset_NN/training_none_encoded_data.npy", allow_pickle=True)
     print("Printing encoding exmaple:")
     print("-"*60)
-    print(f"qname before encoding: {none_encoded_data[1][1]}")
+    print(f"qname before encoding: {none_encoded_data[0][1]}")
     print("qname after encoding:")
-    print(f"{training_data_X[1]} \n")
-    print(f"label before encoding: {none_encoded_data[1][0]}")
-    print(f"label after encoding: {training_data_y[1]} \n")
+    print(f"{training_data_X[0]} \n")
+    print(f"label before encoding: {none_encoded_data[0][0]}")
+    print(f"label after encoding: {training_data_y[0]} \n")
     print("Dictionary used to encode:")
     print(dict)
 
