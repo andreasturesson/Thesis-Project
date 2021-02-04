@@ -1,12 +1,26 @@
-TEST_SIZE: 0.2 
-RANDOM_SUBSPACE: 13 
-FOREST_SIZE: 50 
-BOOTSTRAP_SAMPLE_SIZE: 0.333 
+TEST_SIZE: 0.2
+RANDOM_SUBSPACE: 10 
+FOREST_SIZE: 1 
+MAX_DEPTH: 50 
+BOOTSTRAP_SAMPLE_SIZE: 0.33 
 DATASET: dataset_3.1.csv
 EPOCS: 1
 
-Accuracy: [75.48312722699644]
-Accuracy worst: 75.48312722699644
-Accuracy best: 75.48312722699644
-Accuracy average: 75.48312722699644
+Accuracy: [72.74575560679104]
+Accuracy worst: 72.74575560679104
+Accuracy best: 72.74575560679104
+Accuracy average: 72.74575560679104
+------------------------------------------------------------------------
+TEST_SIZE: 0.2 
+RANDOM_SUBSPACE: 10 
+FOREST_SIZE: 5 
+MAX_DEPTH: 50 
+BOOTSTRAP_SAMPLE_SIZE: 0.33 
+DATASET: dataset_3.1.csv
+EPOCS: 1
+
+Accuracy: [71.45147767763571]
+Accuracy worst: 71.45147767763571
+Accuracy best: 71.45147767763571
+Accuracy average: 71.45147767763571
 ------------------------------------------------------------------------
