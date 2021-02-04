@@ -11,12 +11,12 @@ Source: https://www.udemy.com/course/decision-tree-and-random-forest-python-from
 '''
 
 TEST_SIZE = 0.2
-RANDOM_SUBSPACE = 10
-FOREST_SIZE = 50
-MAX_DEPTH = 64
+RANDOM_SUBSPACE = 5
+FOREST_SIZE = 100
+MAX_DEPTH = 45
 BOOTSTRAP_SAMPLE_SIZE = 0.33
 DATASET = "dataset_3.1.csv"
-EPOCH = 1
+EPOCH = 10
 ACCURACY = []
 ACCURACY_AVERAGE = 0
 ACCURACY_BEST = 0
@@ -259,4 +259,4 @@ if __name__ == '__main__':
         forest = buildForest(bootstrap_training_data, MAX_DEPTH)
         accuracy(False, forest, testing_data)
 
-    # writeResults()
+    writeResults()

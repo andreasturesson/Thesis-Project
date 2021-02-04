@@ -1,12 +1,9 @@
 TEST_SIZE: 0.2 
-RANDOM_SUBSPACE: 13 
-FOREST_SIZE: 50 
-BOOTSTRAP_SAMPLE_SIZE: 0.333 
+RANDOM_SUBSPACE: 5 
+FOREST_SIZE: 100 
+MAX_DEPTH: 45 
+BOOTSTRAP_SAMPLE_SIZE: 0.33 
 DATASET: dataset_3.1.csv
-EPOCS: 1
+EPOCS: 10
 
-Accuracy: [75.48312722699644]
-Accuracy worst: 75.48312722699644
-Accuracy best: 75.48312722699644
-Accuracy average: 75.48312722699644
-------------------------------------------------------------------------
+Accuracy: [<function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>, <function accuracy at 0x00000240FD7F6310>]
