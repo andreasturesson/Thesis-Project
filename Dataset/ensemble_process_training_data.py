@@ -103,10 +103,8 @@ if 'family' in dataframe.columns:
 
 with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
     csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(["total_character",
-                        "letters", "numbers", "special_characters", "letters_number",
-                        "domain_total", "domain_letters", "domain_numbers", "domain_special",
-                        "domain_letterNumber", "domain_numberLetter",
+    csvwriter.writerow(["domain_total", "domain_letters", "domain_numbers", "domain_special", "domain_letters_number_sum",
+                        "domain_letterNumber", "domain_numberLetter", 
                         "domain_AH", "domain_HO", "domain_OV", "domain_VZ",
                         "domain_AH_pair", "domain_HO_pair", "domain_OV_pair", "domain_VZ_pair",
                         "subdomain_total", "subdomain_letters", "subdomain_numbers", "subdomain_special",
@@ -197,11 +195,7 @@ with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
             if char_type == 4:
                 subdomain_special += 1
 
-        csvwriter.writerow([total_character,
-                            letters,
-                            numbers, special_characters,
-                            letters+numbers,
-                            domain_total, domain_letters, domain_numbers, domain_special,
+        csvwriter.writerow([domain_total, domain_letters, domain_numbers, domain_special, domain_letters+domain_numbers,
                             domain_letterNumber, domain_numberLetter,
                             domain_AH, domain_HO, domain_OV, domain_VZ,
                             domain_AH_pair, domain_HO_pair, domain_OV_pair, domain_VZ_pair,
