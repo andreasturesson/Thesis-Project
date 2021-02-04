@@ -17,7 +17,8 @@ class RandomForest:
         self.MAX_DEPTH = MAX_DEPTH
         self.BOOTSTRAP_SAMPLE_SIZE = BOOTSTRAP_SAMPLE_SIZE
         self.EPOCH = EPOCH
-        self.ACCURACY = []
+        self.ACCURACY_VOTE = []
+        self.ACCURACY_SUM = []
         self.ACCURACY_AVERAGE = 0
         self.ACCURACY_BEST = 0
         self.ACCURACY_WORST = 0
@@ -118,7 +119,9 @@ class RandomForest:
 
         accuracy_average = correct_cal1 / bb * 100
         accuracy_average_total = correct_cal2 / bb * 100
-        self.ACCURACY.append(accuracy_average)
+
+        self.ACCURACY_VOTE.append(accuracy_average)
+        self.ACCURACY_SUM.append(accuracy_average_total)
         print("Accuracy average decision: %s Correct: %s Total: %s" % (accuracy_average, correct_cal1, bb), "\n")
         print("Accuracy total average: %s Correct: %s Total: %s" % (accuracy_average_total, correct_cal2, bb), "\n")
 
@@ -148,20 +151,37 @@ class RandomForest:
                 self.TEST_SIZE, self.RANDOM_SUBSPACE, self.FOREST_SIZE, self.MAX_DEPTH, self.BOOTSTRAP_SAMPLE_SIZE))
         results.write("DATASET: " + self.DATASET + "\n")
         results.write("EPOCH: " + str(self.EPOCH) + "\n\n")
-        results.write("Accuracy: %s" % (self.ACCURACY))
-        self.ACCURACY_WORST = self.ACCURACY[0]
-        self.ACCURACY_BEST = self.ACCURACY[0]
-        self.sum = 0
-        for accu in self.ACCURACY:
-            self.sum += accu
-            if (self.ACCURACY_BEST < accu):
-                self.ACCURACY_BEST = accu
-            if (self.ACCURACY_WORST > accu):
-                self.ACCURACY_WORST = accu
-        self.ACCURACY_AVERAGE = self.sum / self.EPOCH
 
-        results.write("\nAccuracy worst: %s\nAccuracy best: %s\nAccuracy average: %s" % (
+        self.ACCURACY_WORST = self.ACCURACY_VOTE[0]
+        self.ACCURACY_BEST = self.ACCURACY_VOTE[0]
+        self.sum = 0
+        for accuracy_vote in self.ACCURACY_VOTE:
+            self.sum += accuracy_vote
+            if (self.ACCURACY_BEST < accuracy_vote):
+                self.ACCURACY_BEST = accuracy_vote
+            if (self.ACCURACY_WORST > accuracy_vote):
+                self.ACCURACY_WORST = accuracy_vote
+        self.ACCURACY_AVERAGE = self.sum / self.EPOCH
+        results.write("Accuracy votes: %s" % (self.ACCURACY_VOTE))
+        results.write("\nAccuracy(votes) worst : %s\nAccuracy(votes) best: %s\nAccuracy(votes) average: %s" % (
             self.ACCURACY_WORST, self.ACCURACY_BEST, self.ACCURACY_AVERAGE))
+
+        results.write("\nAccuracy sum: %s" % (self.ACCURACY_SUM))
+
+        self.ACCURACY_WORST = self.ACCURACY_SUM[0]
+        self.ACCURACY_BEST = self.ACCURACY_SUM[0]
+        self.sum = 0
+        for accuracy_sum in self.ACCURACY_SUM:
+            self.sum += accuracy_sum
+            if (self.ACCURACY_BEST < accuracy_sum):
+                self.ACCURACY_BEST = accuracy_sum
+            if (self.ACCURACY_WORST > accuracy_sum):
+                self.ACCURACY_WORST = accuracy_sum
+        self.ACCURACY_AVERAGE = self.sum / self.EPOCH
+        results.write("Accuracy sum: %s" % (self.ACCURACY_SUM))
+        results.write("\nAccuracy(sum) worst: %s\nAccuracy(sum) best: %s\nAccuracy(sum) average: %s" % (
+            self.ACCURACY_WORST, self.ACCURACY_BEST, self.ACCURACY_AVERAGE))
+
         results.write("\n------------------------------------------------------------------------\n")
         results.close()
 
