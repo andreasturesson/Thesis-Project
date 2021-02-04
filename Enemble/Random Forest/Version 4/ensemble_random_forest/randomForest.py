@@ -147,7 +147,7 @@ class RandomForest:
             "TEST_SIZE: %s \nRANDOM_SUBSPACE: %s \nFOREST_SIZE: %s \nMAX_DEPTH: %s \nBOOTSTRAP_SAMPLE_SIZE: %s \n" % (
                 self.TEST_SIZE, self.RANDOM_SUBSPACE, self.FOREST_SIZE, self.MAX_DEPTH, self.BOOTSTRAP_SAMPLE_SIZE))
         results.write("DATASET: " + self.DATASET + "\n")
-        results.write("EPOCS: " + str(self.EPOCH) + "\n\n")
+        results.write("EPOCH: " + str(self.EPOCH) + "\n\n")
         results.write("Accuracy: %s" % (self.ACCURACY))
         self.ACCURACY_WORST = self.ACCURACY[0]
         self.ACCURACY_BEST = self.ACCURACY[0]
