@@ -6,18 +6,15 @@ Source: https://www.udemy.com/course/decision-tree-and-random-forest-python-from
 '''
 
 if __name__ == '__main__':
-    #rfa0 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=1, MAX_DEPTH= 50)
-    rfa1 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=3, MAX_DEPTH= 25, EPOCH=3)
-    '''
-    rfa2 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=10, MAX_DEPTH= 50)
-    rfa3 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=25, MAX_DEPTH= 50)
-    rfa4 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=25, MAX_DEPTH= 50)
+    dataset = "../../../../Dataset/dataset_ensemble/4.0/dataset_4.1.csv"
+    rfa0 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=10,  MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa1 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=25,  MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa2 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=50,  MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa3 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=75,  MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa4 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=100, MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa5 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=125, MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa6 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=150, MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa7 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=250, MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
+    rfa8 = rf.RandomForest(DATASET=dataset, FOREST_SIZE=500, MAX_DEPTH= 100, EPOCH=3, RANDOM_SUBSPACE=10)
 
-    rfa0 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=1, MAX_DEPTH= 10)
-    rfa1 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=5, MAX_DEPTH= 25)
-    rfa2 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=10, MAX_DEPTH= 50)
-    rfa3 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=25, MAX_DEPTH= 75)
-    rfa4 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=25, MAX_DEPTH= 100)
 
-    rfa4 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=25, MAX_DEPTH=-1)
-    '''
