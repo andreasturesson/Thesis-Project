@@ -1,6 +1,7 @@
 import pandas as pd
 import random
 from tqdm import tqdm
+import math
 
 '''
 Code is inspired or acquired from: Sebastian Mantey(youtube) and AI Sciences, AI Sciences Team(udemy)
@@ -17,6 +18,7 @@ class RandomForest:
         self.MAX_DEPTH = MAX_DEPTH
         self.BOOTSTRAP_SAMPLE_SIZE = BOOTSTRAP_SAMPLE_SIZE
         self.EPOCH = EPOCH
+
         self.ACCURACY_VOTE = []
         self.ACCURACY_SUM = []
         self.ACCURACY_AVERAGE = 0
@@ -24,6 +26,10 @@ class RandomForest:
         self.ACCURACY_WORST = 0
         self.DATASET = DATASET
         self.details = details
+        # True Positives    P=1 and A=1     False Negative   P=0 and A=0
+        # False Positives   P=0 and A=1     True Negative    P=1 and A=0
+        self.TP_VOTE, self.FN_VOTE, self.FP_VOTE, self.TN_VOTE = 0, 0, 0, 0
+        self.TP_SUM, self.FN_SUM, self.FP_SUM, self.TN_SUM = 0, 0, 0, 0
 
         self.data_frame = self.loadData(self.DATASET)
         self.training_data, self.testing_data = self.trainTestSplit(self.data_frame, self.TEST_SIZE)
@@ -33,7 +39,7 @@ class RandomForest:
             self.forest = self.buildForest(self.bootstrap_training_data, self.MAX_DEPTH)
             self.accuracy(self.details, self.forest, self.testing_data)
 
-        self.writeResults()
+        #self.writeResults()
 
     def randomSubspaceSample(self, rows):
         number_of_features_list = []
@@ -117,6 +123,25 @@ class RandomForest:
             if int(prediciton_average_total) == int(actual_value):
                 correct_cal2 += 1
 
+            if(actual_value == 1):
+                if(prediciton_average == 1):
+                    self.TP_VOTE += 1
+                elif(prediciton_average == 0):
+                    self.FP_VOTE += 1
+                if(prediciton_average_total == 1):
+                    self.TP_SUM +=1
+                elif(prediciton_average_total == 0):
+                    self.FP_SUM += 1
+            else:
+                if (prediciton_average == 0):
+                    self.TN_VOTE += 1
+                elif (prediciton_average == 1):
+                    self.FN_VOTE += 1
+                if (prediciton_average_total == 0):
+                  self.TN_SUM += 1
+                elif (prediciton_average_total == 1):
+                  self.FN_SUM += 1
+
         accuracy_average = correct_cal1 / bb * 100
         accuracy_average_total = correct_cal2 / bb * 100
 
@@ -124,6 +149,21 @@ class RandomForest:
         self.ACCURACY_SUM.append(accuracy_average_total)
         print("Accuracy average decision: %s Correct: %s Total: %s" % (accuracy_average, correct_cal1, bb), "\n")
         print("Accuracy total average: %s Correct: %s Total: %s" % (accuracy_average_total, correct_cal2, bb), "\n")
+        self.classification()
+
+    def classification(self):
+        precision_vote = self.TP_VOTE / (self.TP_VOTE + self.FP_VOTE)
+        precision_sum = self.TP_SUM / (self.TP_SUM + self.FP_SUM)
+        recall_vote = self.TP_VOTE / (self.TP_VOTE + self.FN_VOTE)
+        recall_sum = self.TP_SUM / (self.TP_SUM + self.FN_SUM)
+        F1_score_vote = 2 * ((precision_vote * recall_vote)/(precision_vote + recall_vote))
+        F1_score_sum = 2 * ((precision_sum * recall_sum) / (precision_sum + recall_sum))
+        MCC_vote = ((self.TP_VOTE*self.TN_VOTE)-(self.FP_VOTE*self.FN_VOTE))/ math.sqrt((self.TP_VOTE+self.FP_VOTE)*(self.TP_VOTE+self.FN_VOTE)*(self.TN_VOTE+self.FP_VOTE)*(self.TN_VOTE+self.FN_VOTE))
+        MCC_sum = ((self.TP_SUM*self.TN_SUM)-(self.FP_SUM*self.FN_SUM))/ math.sqrt((self.TP_SUM+self.FP_SUM)*(self.TP_SUM+self.FN_SUM)*(self.TN_SUM+self.FP_SUM)*(self.TN_SUM+self.FN_SUM))
+        print("\nVOTE\nPrecision: %s\nRecall: %s\nF1: %s\nMCC: %s" % (
+        precision_vote, recall_vote, F1_score_vote, MCC_vote))
+        print("\nSUM\nPrecision: %s\nRecall: %s\nF1: %s\nMCC: %s" % (
+        precision_sum, recall_sum, F1_score_sum, MCC_sum))
 
     def informationGain(self, left_node, right_node, current_impurity):
         probability = float(len(left_node)) / (len(right_node))
@@ -184,6 +224,7 @@ class RandomForest:
 
         results.write("\n------------------------------------------------------------------------\n")
         results.close()
+
 
     def loadData(self, filename):
         self.DATASET = filename
