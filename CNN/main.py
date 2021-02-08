@@ -1,3 +1,6 @@
+# Some code is inspired from https://chriskhanhtran.github.io/posts/cnn-sentence-classification/
+# and https://www.youtube.com/watch?v=BzcBsTou0C0&list=PLQVvvaa0QuDdeMyHEYc0gxFpYwHY2Qfdh&index=1 this playlist
+
 from tqdm import tqdm
 import numpy as np
 import matplotlib.pyplot as plt
@@ -17,22 +20,22 @@ else:
     print('No GPU available, using the CPU instead.')
     device = torch.device("cpu")
 
-train_inputs, train_labels, val_inputs, val_labels = hf.load_trainset("Dataset/dataset_NN/2.0/2.1/training_data_X.npy",
-                                                                      "Dataset/dataset_NN/2.0/2.1/training_data_y.npy")
+train_inputs, train_labels, val_inputs, val_labels = hf.load_trainset("Dataset/3.2/training_data_X.npy",
+                                                                      "Dataset/3.2/training_data_y.npy")
 
 train_dataloader, val_dataloader = hf.data_loader(train_inputs, train_labels, val_inputs, val_labels)
 
+MODEL_NAME = f"model-[14-10-7-5]-[256-256-256-256]-{int(time.time())}"
+print(MODEL_NAME)
 
 
 class CNN(nn.Module):
 
     def __init__(self,
-                 freeze_embedding=False,
                  vocab_size=70,
-                 embed_dim=3,
-                 filter_sizes=[2, 3, 4],
-                 num_filters=[50, 50, 50],
-                 num_classes=2,
+                 embed_dim=128,
+                 filter_sizes=[14, 10, 7, 5],
+                 num_filters=[256, 256, 256, 256],
                  dropout=0.5):
 
         super(CNN, self).__init__()
@@ -43,7 +46,7 @@ class CNN(nn.Module):
                                           for i in range(len(filter_sizes))])
 
         self.fc = nn.Linear(np.sum(num_filters), 2)     # Sum of outputs form convs, number of outcomes
-        self.drop = nn.Dropout(0.5)     # Percentage of ignored nodes
+        self.drop = nn.Dropout(dropout)     # Percentage of ignored nodes
 
     def forward(self, input):
 
@@ -63,29 +66,36 @@ def train(model, optim, train_data, val_data=None, epochs=1):
     print("-" * 60)
 
     best_accuracy = 0
+    with open("model.log", "a") as f:
+        for epoch in range(epochs):
+            t0_epoch = time.time()
+            total_loss = 0
+            model.train()
 
-    for epoch in range(epochs):
-        t0_epoch = time.time()
-        total_loss = 0
-        model.train()
+            for i, data in enumerate(train_data):
+                batch, labels = data
+                model.zero_grad()
+                outputs = model(batch.type(torch.LongTensor).to(device))
+                preds = torch.argmax(outputs, dim=1).flatten()
+                acc = (preds.cpu() == labels.cpu()).numpy().mean() * 100
+                loss = loss_function(outputs, labels.type(torch.LongTensor).to(device))
 
-        for i, data in enumerate(train_data):
-            batch, labels = data
-            model.zero_grad()
-            outputs = model(batch.type(torch.LongTensor).to(device))
-            loss = loss_function(outputs, labels.to(device))
-            total_loss += loss.item()
-            loss.backward()
-            optimizer.step()
-        avg_train_loss = total_loss / len(train_dataloader)
+                total_loss += loss.item()
+                loss.backward()
+                optim.step()
 
-        if val_data is not None:
-            val_loss, val_accuracy = evaluate(model, val_dataloader)
-            if val_accuracy > best_accuracy:
-                best_accuracy = val_accuracy
-            time_elapsed = time.time() - t0_epoch
-            print(f"{epoch + 1:^7} | {avg_train_loss:^12.6f} | "
-                  f"{val_loss:^10.6f} | {val_accuracy:^9.2f} | {time_elapsed:^9.2f}")
+                if i % 100 == 0:
+                    val_loss, val_accuracy = test(model, val_dataloader)
+                    f.write(f"{MODEL_NAME},{round(time.time(),3)},{round(float(acc),2)},{round(float(loss),4)},"
+                            f"{round(float(val_accuracy),2)},{round(float(val_loss),4)}\n")
+
+            avg_train_loss = total_loss / len(train_dataloader)
+
+            if val_data is not None:
+                val_loss, val_accuracy = evaluate(model, val_dataloader)
+                time_elapsed = time.time() - t0_epoch
+                print(f"{epoch + 1:^7} | {avg_train_loss:^12.6f} | "
+                      f"{val_loss:^10.6f} | {val_accuracy:^9.2f} | {time_elapsed:^9.2f}")
 
 
 def evaluate(model, val_data):
@@ -99,18 +109,32 @@ def evaluate(model, val_data):
 
         with torch.no_grad():
             outputs = model(batch.to(device))
-        loss = loss_function(outputs, labels.to(device))
+        loss = loss_function(outputs, labels.type(torch.LongTensor).to(device))
         val_loss.append(loss.item())
 
-        preds = torch.argmax(batch, dim=1).flatten()
+        preds = torch.argmax(outputs, dim=1).flatten()
 
-        accuracy = (preds == labels).cpu().numpy().mean() * 100
+        accuracy = (preds.cpu() == labels.cpu()).numpy().mean() * 100
         val_accuracy.append(accuracy)
 
     val_loss = np.mean(val_loss)
     val_accuracy = np.mean(val_accuracy)
 
     return val_loss, val_accuracy
+
+
+def test(model, val_data):
+    random_index = np.random.randint(len(val_data))
+    for i, data in enumerate(val_data):
+        if i == random_index:
+            batch, labels = tuple(t for t in data)
+
+    with torch.no_grad():
+        outputs = model(batch.to(device))
+        preds = torch.argmax(outputs, dim=1).flatten()
+        acc = (preds.cpu() == labels.cpu()).numpy().mean() * 100
+        loss = loss_function(outputs, labels.type(torch.LongTensor).to(device))
+    return loss, acc
 
 
 net = CNN()
