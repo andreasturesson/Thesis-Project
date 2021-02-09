@@ -2,7 +2,7 @@ import pandas as pd
 import glob
 from tqdm import tqdm
 
-DGA_paths = glob.glob("traffic_DGA/raw_DGA/*/list/5000.txt")
+DGA_paths = glob.glob("traffic_DGA/raw_DGA/*/list/10000.txt")
 normal_paths = glob.glob("traffic_Alexa_Majestic/raw_Alexa_Majestic/list/1000000.txt")
 
 print("Parsing DGA traffic")

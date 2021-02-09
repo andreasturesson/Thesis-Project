@@ -14,8 +14,13 @@ Normal traffic filter: Top 10000 domains from Majestic-top-million-domains
 3.0 
 DGA domains: traffic_DGA
 Normal domains: traffic_Alexa_Majestic
+Mix
 
-
+4.0
+DGA domains: traffic_DGA
+Normal domains: traffic_Alexa_Majestic
+Several sizes
+Only scalar
 
 
 
