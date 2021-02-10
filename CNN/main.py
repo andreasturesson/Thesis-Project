@@ -20,8 +20,8 @@ else:
     print('No GPU available, using the CPU instead.')
     device = torch.device("cpu")
 
-train_inputs, train_labels, val_inputs, val_labels = hf.load_trainset("Dataset/3.2/training_data_X.npy",
-                                                                      "Dataset/3.2/training_data_y.npy")
+train_inputs, train_labels, val_inputs, val_labels = hf.load_trainset("../Dataset/dataset_NN/4.0/4.4/dataset_4.4/training_data_X.npy",
+                                                                      "../Dataset/dataset_NN/4.0/4.4/dataset_4.4/training_data_y.npy")
 
 train_dataloader, val_dataloader = hf.data_loader(train_inputs, train_labels, val_inputs, val_labels)
 
@@ -141,4 +141,4 @@ net = CNN()
 net = net.to(device)
 loss_function = nn.CrossEntropyLoss()
 optimizer = optim.Adam(net.parameters(), lr=0.001)
-train(net, optimizer, train_dataloader, val_dataloader, epochs=10)
+train(net, optimizer, train_dataloader, val_dataloader, epochs=5)
