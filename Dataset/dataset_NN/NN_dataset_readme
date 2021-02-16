@@ -22,5 +22,12 @@ Normal domains: traffic_Alexa_Majestic
 Several sizes
 Only scalar
 
+5.0
+DGA domains: traffic_DGA
+Normal domains: traffic_Alexa_Majestic
+Several sizes
+Only scalar
+split: train & test
+
 
 

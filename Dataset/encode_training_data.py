@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 import re
 import csv
 
@@ -105,41 +106,60 @@ class Data(object):
         return str2idx
 
 
-def main():
+def process_data(file):
     alphabet = "abcdefghijklmnopqrstuvwxyz0123456789-,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]{}"
-    input_file = open("training_data.csv", "r+")
+    file_type = file.split("_")[0]
+
+    dataframe = pd.read_csv(file) 
+    if 'family' in dataframe.columns:
+        family = dataframe[['family', 'label_multiclass']].to_numpy()
+        np.save(f"dataset_NN/{file_type}_family.npy", family)
+
+    input_file = open(file, "r+")
     reader_file = csv.reader(input_file)
     data_size = len(list(reader_file))-1
 
-    training_data = Data("training_data.csv", alphabet, 256, 2, data_size)
-    training_data.load_data()
-    training_data_X, training_data_y = training_data.get_all_data()
+    data = Data(file, alphabet, 256, 2, data_size)
+    data.load_data()
+    data_X, data_y = data.get_all_data()
 
-    dict = training_data.get_dict()
-    training_none_encoded_data = training_data.get_none_encoded_data()
+    dict = data.get_dict()
+    none_encoded_data = data.get_none_encoded_data()
 
     # Save encoded and non encoded data aswell as the dictionary used to encode.
     # training_data_X = encoded qname
     # training_data_y = encoded label
     # training_none_encoded_data = qname and label non encoded
     # dict = dictionary for encoding
-    np.save("dataset_NN/training_data_X.npy", training_data_X)
-    np.save("dataset_NN/training_data_y.npy", training_data_y)
-    np.save("dataset_NN/training_none_encoded_data", training_none_encoded_data)
+    np.save(f"dataset_NN/{file_type}_data_X.npy", data_X)
+    np.save(f"dataset_NN/{file_type}_data_y.npy", data_y)
+    np.save("dataset_NN/none_encoded_data", none_encoded_data)
     np.save("dataset_NN/dict.npy", dict)
 
     # Print example of encoding
     dict = np.load("dataset_NN/dict.npy", allow_pickle=True)
-    none_encoded_data = np.load("dataset_NN/training_none_encoded_data.npy", allow_pickle=True)
+    none_encoded_data = np.load("dataset_NN/none_encoded_data.npy", allow_pickle=True)
+    family = np.load(f"dataset_NN/{file_type}_family.npy", allow_pickle=True)
     print("Printing encoding exmaple:")
     print("-"*60)
     print(f"qname before encoding: {none_encoded_data[0][1]}")
     print("qname after encoding:")
-    print(f"{training_data_X[0]} \n")
+    print(f"{data_X[0]} \n")
     print(f"label before encoding: {none_encoded_data[0][0]}")
-    print(f"label after encoding: {training_data_y[0]} \n")
+    print(f"label after encoding: {data_y[0]} \n")
+    print(f"family: {family[0]} \n")
     print("Dictionary used to encode:")
     print(dict)
+    print("-"*60)
+    print("\n")
+
+
+def main():
+    train_file = "train_data.csv"
+    test_file = "test_data.csv"
+
+    process_data(train_file)
+    process_data(test_file)
 
 
 if __name__ == "__main__":

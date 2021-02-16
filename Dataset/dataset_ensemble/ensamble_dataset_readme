@@ -97,3 +97,9 @@ DGA domains: traffic_DGA
 Normal domains: traffic_Alexa_Majestic
 FEATURES 5.0
 
+6.0 
+DGA domains: traffic_DGA
+Normal domains: traffic_Alexa_Majestic
+FEATURES 5.0
+Split: train & test
+
