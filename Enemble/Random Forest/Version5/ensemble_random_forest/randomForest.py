@@ -26,8 +26,7 @@ class RandomForest:
         self.ACCURACY_WORST = 0
         self.DATASET = DATASET
         self.details = details
-        # True Positives    P=1 and A=1     False Negative   P=0 and A=0
-        # False Positives   P=0 and A=1     True Negative    P=1 and A=0
+
         self.TP_VOTE, self.FN_VOTE, self.FP_VOTE, self.TN_VOTE = 0, 0, 0, 0
         self.TP_SUM, self.FN_SUM, self.FP_SUM, self.TN_SUM = 0, 0, 0, 0
 
@@ -127,20 +126,20 @@ class RandomForest:
                 if(prediciton_average == 1):
                     self.TP_VOTE += 1
                 elif(prediciton_average == 0):
-                    self.FP_VOTE += 1
+                    self.FN_VOTE += 1
                 if(prediciton_average_total == 1):
                     self.TP_SUM +=1
                 elif(prediciton_average_total == 0):
-                    self.FP_SUM += 1
+                    self.FN_SUM += 1
             else:
                 if (prediciton_average == 0):
                     self.TN_VOTE += 1
                 elif (prediciton_average == 1):
-                    self.FN_VOTE += 1
+                    self.FP_VOTE += 1
                 if (prediciton_average_total == 0):
-                  self.TN_SUM += 1
+                    self.TN_SUM += 1
                 elif (prediciton_average_total == 1):
-                  self.FN_SUM += 1
+                    self.FP_SUM += 1
 
         accuracy_average = correct_cal1 / bb * 100
         accuracy_average_total = correct_cal2 / bb * 100
@@ -224,7 +223,6 @@ class RandomForest:
 
         results.write("\n------------------------------------------------------------------------\n")
         results.close()
-
 
     def loadData(self, filename):
         self.DATASET = filename
