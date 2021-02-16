@@ -1,4 +1,4 @@
-# data_loader is taken from https://chriskhanhtran.github.io/posts/cnn-sentence-classification/
+# code is taken from https://chriskhanhtran.github.io/posts/cnn-sentence-classification/
 
 import torch
 import numpy as np
@@ -9,12 +9,11 @@ def load_trainset(path_X, path_y):
     training_data_X = torch.tensor(np.load(
         path_X, allow_pickle=True))
     training_data_y = torch.tensor(np.load(
-        path_y, allow_pickle=True))
+        path_y, allow_pickle=True).astype(int))
 
     # Turn the labels from one hot to scalar: [0,1] or [1,0] to [0] or [1] (not haha)
     # Loss function CrossEntropyLoss only takes scalar
     # Remove line below if loss function require one hot
-    training_data_y = torch.argmax(training_data_y, 1)
 
     # Validation/train data split
     VAL_PCT = 0.1

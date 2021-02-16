@@ -1,4 +1,5 @@
 import pandas as pd
+import os
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
@@ -23,6 +24,7 @@ def featureImportance(rfc):
     cols = dnsrequest_dataset.columns.drop('label')
     feature_importances = pd.Series(rfc.feature_importances_, index = cols).sort_values(ascending=False)
     print(feature_importances)
+    feature_importances.to_csv("feature_importance.csv", header=True, mode='a')
 
 if __name__ == '__main__':
     trainedRFC1 = randonForest()
@@ -33,6 +35,13 @@ if __name__ == '__main__':
 
     trainedRFC3 = randonForest()
     featureImportance(trainedRFC3)
+    df = pd.read_csv("feature_importance.csv", names=["feature", "value"])
+    df = df.groupby(['feature'])['value'].agg(lambda x: x.unique().sum()/x.nunique())
+    print(df)
+
+    os.remove('feature_importance.csv')
+
+    #df.to_csv("avg.csv", float_format='%.15f', mode='a')
 
 
 

@@ -103,7 +103,7 @@ def combine_DGA_traffic(DGA_paths, normal_paths):
     mincount = min([df.shape[0] for df in df_DGA])
 
     # Sample with mincount of DGA entries
-    df_DGA = [df.sample(mincount, random_state=1) for df in df_DGA]
+    df_DGA = [df.sample(5000, random_state=1) for df in df_DGA]
 
     # Retrive the count(size) of tunneling csv with lowest entries
     normal_mincount = min([df.shape[0] for df in df_normal])
@@ -175,7 +175,7 @@ def main():
         tunnel_paths = glob.glob(f"{malicious_dir}/ExfiltrationAttackFQDNs.csv")
         combine_tunneling_traffic(tunnel_paths, normal_paths)
     else:
-        DGA_paths = glob.glob(f"{malicious_dir}/parsed_DGA/*/5000.csv")
+        DGA_paths = glob.glob(f"{malicious_dir}/parsed_DGA/*/10000.csv")
         normal_paths = glob.glob(f"{benign_dir}/parsed_Alexa_Majestic/1000000.csv")
         combine_DGA_traffic(DGA_paths, normal_paths)
 

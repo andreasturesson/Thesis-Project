@@ -178,7 +178,7 @@ class RandomForest:
             if (self.ACCURACY_WORST > accuracy_sum):
                 self.ACCURACY_WORST = accuracy_sum
         self.ACCURACY_AVERAGE = self.sum / self.EPOCH
-        results.write("Accuracy sum: %s" % (self.ACCURACY_SUM))
+        results.write("\nAccuracy sum: %s" % (self.ACCURACY_SUM))
         results.write("\nAccuracy(sum) worst: %s\nAccuracy(sum) best: %s\nAccuracy(sum) average: %s" % (
             self.ACCURACY_WORST, self.ACCURACY_BEST, self.ACCURACY_AVERAGE))
 
