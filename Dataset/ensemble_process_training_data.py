@@ -286,154 +286,168 @@ def charCheck(input_char):
     # print(lowercase_letters, uppercase_letters, digits, dots, special_characters)
 
 
-dataframe = pd.read_csv("training_data.csv")
+def process_data(file):
+    dataframe = pd.read_csv(file) 
 
-if 'family' in dataframe.columns:
-    dataframe.to_csv("dataset_ensemble/family.csv", sep=",", index=False, columns=["family"])
+    file_type = file.split("_")[0]
 
-with open(os.path.join("dataset_ensemble/", "dataset.csv"), "w+") as csvfile:
-    csvwriter = csv.writer(csvfile)
-    csvwriter.writerow(["domain_total", "domain_tokens", "domain_letters", "domain_numbers", "dots", "domain_special", "domain_letters_number_sum",
-                        "domain_letterNumber", "domain_numberLetter",
-                        "vowel_ratio", "constant_ratio", "number_ratio", "hexadecimal_ratio",  
-                        #"domain_AH", "domain_HO", "domain_OV", "domain_VZ",
-                        "domain_AD", "domain_DG", "domain_GJ", "domain_JM", "domain_MP", "domain_PS", "domain_SV", "domain_VY", "domain_YZ",
-                        #"domain_AH_pair", "domain_HO_pair", "domain_OV_pair", "domain_VZ_pair",
-                        "domain_AD_pair", "domain_DG_pair", "domain_GJ_pair", "domain_JM_pair", "domain_MP_pair", "domain_PS_pair", "domain_SV_pair", "domain_VY_pair", "domain_YZ_pair",
-                        "domain_lng_numb_seq", "domain_lng_vowel_seq", "domain_lng_constant_seq",
-                        "domain_uniq_chars", "domain_uniq_numbers",
-                        "subdomain_total", "subdomain_tokens", "subdomain_letters", #"subdomain_numbers", "subdomain_special",
-                        "subdomain_uniq_chars", "subdomain_uniq_numbers",
-                        #"subdomain_letterNumber", "subdomain_numberLetter", 
-                        #"subdomain_AH", "subdomain_HO", "subdomain_OV", "subdomain_VZ",
-                        #"subdomain_AM", "subdomain_MZ",
-                        #"subdomain_AH_pair", "subdomain_HO_pair", "subdomain_OV_pair", "subdomain_VZ_pair", 
-                        "suffix_total", "suffix_hash", "suffix_AH", "suffix_HO", "suffix_OV", "suffix_VZ", 
-                        "label"])
+    if 'family' in dataframe.columns:
+        dataframe.to_csv(f"dataset_ensemble/{file_type}_family.csv", sep=",", index=False, columns=["family", "label_multiclass"])
 
-    for row in dataframe.itertuples():
-        label, qname = "", ""
-        subdomain, domain, fqdn, suffix = "", "", "", ""
+    with open(os.path.join("dataset_ensemble/", f"{file_type}_dataset.csv"), "w+") as csvfile:
+        csvwriter = csv.writer(csvfile)
+        csvwriter.writerow(["domain_total", "domain_tokens", "domain_letters", "domain_numbers", "dots", "domain_special", "domain_letters_number_sum",
+                            "domain_letterNumber", "domain_numberLetter",
+                            "vowel_ratio", "constant_ratio", "number_ratio", "hexadecimal_ratio",  
+                            #"domain_AH", "domain_HO", "domain_OV", "domain_VZ",
+                            "domain_AD", "domain_DG", "domain_GJ", "domain_JM", "domain_MP", "domain_PS", "domain_SV", "domain_VY", "domain_YZ",
+                            #"domain_AH_pair", "domain_HO_pair", "domain_OV_pair", "domain_VZ_pair",
+                            "domain_AD_pair", "domain_DG_pair", "domain_GJ_pair", "domain_JM_pair", "domain_MP_pair", "domain_PS_pair", "domain_SV_pair", "domain_VY_pair", "domain_YZ_pair",
+                            "domain_lng_numb_seq", "domain_lng_vowel_seq", "domain_lng_constant_seq",
+                            "domain_uniq_chars", "domain_uniq_numbers",
+                            "subdomain_total", "subdomain_tokens", "subdomain_letters", #"subdomain_numbers", "subdomain_special",
+                            "subdomain_uniq_chars", "subdomain_uniq_numbers",
+                            #"subdomain_letterNumber", "subdomain_numberLetter", 
+                            #"subdomain_AH", "subdomain_HO", "subdomain_OV", "subdomain_VZ",
+                            #"subdomain_AM", "subdomain_MZ",
+                            #"subdomain_AH_pair", "subdomain_HO_pair", "subdomain_OV_pair", "subdomain_VZ_pair", 
+                            "suffix_total", "suffix_hash", "suffix_AH", "suffix_HO", "suffix_OV", "suffix_VZ", 
+                            "label"])
 
-        # Domain + subdomain values
-        total_character, letters, numbers, dots, special_characters = 0, 0, 0, 0, 0
-        vowel_ratio, constant_ratio, number_ratio, hexadecimal_ratio, special_ratio = 0, 0, 0, 0, 0
+        for row in dataframe.itertuples():
+            label, qname = "", ""
+            subdomain, domain, fqdn, suffix = "", "", "", ""
 
-        # Domain values
-        domain_total, domain_tokens, domain_letters, domain_numbers, domain_special = 0, 0, 0, 0, 0
-        domain_lng_vowel_seq, domain_lng_constant_seq, domain_lng_numb_seq = 0, 0, 0
-        domain_letterNumber, domain_numberLetter = 0, 0
-        domain_uniq_chars, domain_uniq_numbers = 0, 0
-        domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
-        domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY, domain_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
+            # Domain + subdomain values
+            total_character, letters, numbers, dots, special_characters = 0, 0, 0, 0, 0
+            vowel_ratio, constant_ratio, number_ratio, hexadecimal_ratio, special_ratio = 0, 0, 0, 0, 0
 
-        # Subdomain values
-        subdomain_total, subdomain_tokens, subdomain_letters, subdomain_numbers, subdomain_special = 0, 0, 0, 0, 0
-        subdomain_uniq_chars, subdomain_uniq_numbers = 0, 0
-        #subdomain_letterNumber, subdomain_numberLetter = 0, 0
-        #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ = 0, 0, 0, 0
-        #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair = 0, 0, 0, 0
+            # Domain values
+            domain_total, domain_tokens, domain_letters, domain_numbers, domain_special = 0, 0, 0, 0, 0
+            domain_lng_vowel_seq, domain_lng_constant_seq, domain_lng_numb_seq = 0, 0, 0
+            domain_letterNumber, domain_numberLetter = 0, 0
+            domain_uniq_chars, domain_uniq_numbers = 0, 0
+            domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
+            domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY, domain_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-        # Suffix values
-        suffix_total, suffix_hash, suffix_AH, suffix_HO, suffix_OV, suffix_VZ = 0, 0, 0, 0, 0, 0
+            # Subdomain values
+            subdomain_total, subdomain_tokens, subdomain_letters, subdomain_numbers, subdomain_special = 0, 0, 0, 0, 0
+            subdomain_uniq_chars, subdomain_uniq_numbers = 0, 0
+            #subdomain_letterNumber, subdomain_numberLetter = 0, 0
+            #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ = 0, 0, 0, 0
+            #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair = 0, 0, 0, 0
 
-        label = row.label
-        qname = row.qname
+            # Suffix values
+            suffix_total, suffix_hash, suffix_AH, suffix_HO, suffix_OV, suffix_VZ = 0, 0, 0, 0, 0, 0
 
-        ext = tldextract.extract(qname)
-        fqdn = ext.fqdn
-        domain = ext.domain
-        suffix = ext.suffix
-        subdomain = ext.subdomain
-        subdomain_domain = (subdomain, domain)
-        subdomain_domain = '.'.join(subdomain_domain)
+            label = row.label
+            qname = row.qname
 
-        vowel_ratio, constant_ratio = constant_vowel_ratio(domain, subdomain)
-        number_ratio = numbers_ratio(domain, subdomain)
-        hexadecimal_ratio = hex_ratio(domain, subdomain)
+            ext = tldextract.extract(qname)
+            fqdn = ext.fqdn
+            domain = ext.domain
+            suffix = ext.suffix
+            subdomain = ext.subdomain
+            subdomain_domain = (subdomain, domain)
+            subdomain_domain = '.'.join(subdomain_domain)
 
-        domain_total = len(domain)
-        domain_letterNumber = pair_letter_number(domain)
-        domain_numberLetter = pair_number_letter(domain)
-        domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ = alphabet_small_gap(domain)
-        domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair = pair_alphabet_small_gap(domain)
-        domain_lng_numb_seq = longest_number_sequence(domain)
-        domain_lng_vowel_seq, domain_lng_constant_seq = longest_vowel_constant_sequence(domain)
-        domain_uniq_chars = unique_chars(domain)
-        domain_uniq_numbers = unique_numbers(domain)
-        domain_tokens = number_tokens(domain)
-        
-        #subdomain_letterNumber = letterNumberCheck(subdomain)
-        #subdomain_numberLetter = numberLetterCheck(subdomain)
-        #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ  = alphabetCheck(subdomain)
-        #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair = alphabetPairCheck(subdomain)
-        subdomain_total = len(subdomain)
-        subdomain_uniq_chars = unique_chars(subdomain)
-        subdomain_uniq_numbers = unique_numbers(subdomain)
-        subdomain_tokens = number_tokens(subdomain)
-        
-        suffix_total = len(suffix)
-        suffix_AH, suffix_HO, suffix_OV, suffix_VZ = alphabet_large_gap(suffix)
-        suffix_hash = suffix_hashing(suffix)
+            vowel_ratio, constant_ratio = constant_vowel_ratio(domain, subdomain)
+            number_ratio = numbers_ratio(domain, subdomain)
+            hexadecimal_ratio = hex_ratio(domain, subdomain)
 
-        if type(fqdn) != float:
-            total_character = len(subdomain_domain)
-        else:
-            continue
+            domain_total = len(domain)
+            domain_letterNumber = pair_letter_number(domain)
+            domain_numberLetter = pair_number_letter(domain)
+            domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ = alphabet_small_gap(domain)
+            domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair = pair_alphabet_small_gap(domain)
+            domain_lng_numb_seq = longest_number_sequence(domain)
+            domain_lng_vowel_seq, domain_lng_constant_seq = longest_vowel_constant_sequence(domain)
+            domain_uniq_chars = unique_chars(domain)
+            domain_uniq_numbers = unique_numbers(domain)
+            domain_tokens = number_tokens(domain)
+            
+            #subdomain_letterNumber = letterNumberCheck(subdomain)
+            #subdomain_numberLetter = numberLetterCheck(subdomain)
+            #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ  = alphabetCheck(subdomain)
+            #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair = alphabetPairCheck(subdomain)
+            subdomain_total = len(subdomain)
+            subdomain_uniq_chars = unique_chars(subdomain)
+            subdomain_uniq_numbers = unique_numbers(subdomain)
+            subdomain_tokens = number_tokens(subdomain)
+            
+            suffix_total = len(suffix)
+            suffix_AH, suffix_HO, suffix_OV, suffix_VZ = alphabet_large_gap(suffix)
+            suffix_hash = suffix_hashing(suffix)
 
-        for char in subdomain_domain:
-            char_type = charCheck(char)
-            if char_type == 1:
-                letters += 1
-            elif char_type == 2:
-                # Uppecase does not exist, keep this just in case for later
-                letters += 1
-            elif char_type == 3:
-                numbers += 1
-            elif char_type == 4:
-                dots += 1
-            elif char_type == 5:
-                special_characters += 1
+            if type(fqdn) != float:
+                total_character = len(subdomain_domain)
+            else:
+                continue
 
-        for char in domain:
-            char_type = charCheck(char)
-            if char_type == 1:
-                domain_letters += 1
-            elif char_type == 2:
-                # Uppecase does not exist, keep this just in case for later
-                domain_letters += 1
-            elif char_type == 3:
-                domain_numbers += 1
-            elif char_type == 5:
-                domain_special += 1
+            for char in subdomain_domain:
+                char_type = charCheck(char)
+                if char_type == 1:
+                    letters += 1
+                elif char_type == 2:
+                    # Uppecase does not exist, keep this just in case for later
+                    letters += 1
+                elif char_type == 3:
+                    numbers += 1
+                elif char_type == 4:
+                    dots += 1
+                elif char_type == 5:
+                    special_characters += 1
 
-        for char in subdomain:
-            char_type = charCheck(char)
-            if char_type == 1:
-                subdomain_letters += 1
-            if char_type == 2:
-                # Uppecase does not exist, keep this just in case for later
-                subdomain_letters += 1
-            if char_type == 3:
-                subdomain_numbers += 1
-            if char_type == 4:
-                subdomain_special += 1
+            for char in domain:
+                char_type = charCheck(char)
+                if char_type == 1:
+                    domain_letters += 1
+                elif char_type == 2:
+                    # Uppecase does not exist, keep this just in case for later
+                    domain_letters += 1
+                elif char_type == 3:
+                    domain_numbers += 1
+                elif char_type == 5:
+                    domain_special += 1
 
-        csvwriter.writerow([domain_total, domain_tokens, domain_letters, domain_numbers, dots, domain_special, domain_letters+domain_numbers,
-                            domain_letterNumber, domain_numberLetter,
-                            vowel_ratio, constant_ratio, number_ratio, hexadecimal_ratio,
-                            #domain_AH, domain_HO, domain_OV, domain_VZ,
-                            domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ,
-                            #domain_AH_pair, domain_HO_pair, domain_OV_pair, domain_VZ_pair,
-                            domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair,
-                            domain_lng_numb_seq, domain_lng_vowel_seq, domain_lng_constant_seq,
-                            domain_uniq_chars, domain_uniq_numbers,
-                            subdomain_total, subdomain_tokens, subdomain_letters, #subdomain_numbers, subdomain_special,
-                            subdomain_uniq_chars, subdomain_uniq_numbers,
-                            #subdomain_letterNumber, subdomain_numberLetter,
-                            #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ,
-                            #subdomain_AM, subdomain_MZ,
-                            #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair,
-                            suffix_total, suffix_hash, suffix_AH, suffix_HO, suffix_OV, suffix_VZ,
-                            label])
+            for char in subdomain:
+                char_type = charCheck(char)
+                if char_type == 1:
+                    subdomain_letters += 1
+                if char_type == 2:
+                    # Uppecase does not exist, keep this just in case for later
+                    subdomain_letters += 1
+                if char_type == 3:
+                    subdomain_numbers += 1
+                if char_type == 4:
+                    subdomain_special += 1
 
+            csvwriter.writerow([domain_total, domain_tokens, domain_letters, domain_numbers, dots, domain_special, domain_letters+domain_numbers,
+                                domain_letterNumber, domain_numberLetter,
+                                vowel_ratio, constant_ratio, number_ratio, hexadecimal_ratio,
+                                #domain_AH, domain_HO, domain_OV, domain_VZ,
+                                domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ,
+                                #domain_AH_pair, domain_HO_pair, domain_OV_pair, domain_VZ_pair,
+                                domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair,
+                                domain_lng_numb_seq, domain_lng_vowel_seq, domain_lng_constant_seq,
+                                domain_uniq_chars, domain_uniq_numbers,
+                                subdomain_total, subdomain_tokens, subdomain_letters, #subdomain_numbers, subdomain_special,
+                                subdomain_uniq_chars, subdomain_uniq_numbers,
+                                #subdomain_letterNumber, subdomain_numberLetter,
+                                #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ,
+                                #subdomain_AM, subdomain_MZ,
+                                #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair,
+                                suffix_total, suffix_hash, suffix_AH, suffix_HO, suffix_OV, suffix_VZ,
+                                label])
+
+
+def main():
+    train_file = "train_data.csv"
+    test_file = "test_data.csv"
+    
+    process_data(train_file) 
+    process_data(test_file)
+
+
+if __name__ == "__main__":
+    main()
