@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import re
 import csv
+import os
 
 # Inspired by https://github.com/netrack/learn/blob/master/dns/cnn.py
 
@@ -157,9 +158,24 @@ def process_data(file):
 def main():
     train_file = "train_data.csv"
     test_file = "test_data.csv"
+    GAN_train_file = "GANtrain_data.csv"
+    GAN_test_file = "GANtest_data.csv"
+
+    dataframe = pd.read_csv(train_file)
+    dataframe = dataframe.loc[dataframe['label'] == 0]
+    dataframe.to_csv(GAN_train_file, index=False, header=True)
+
+    dataframe = pd.read_csv(test_file)
+    dataframe = dataframe.loc[dataframe['label'] == 0]
+    dataframe.to_csv(GAN_test_file, index=False, header=True)
 
     process_data(train_file)
     process_data(test_file)
+    process_data(GAN_train_file)
+    process_data(GAN_test_file)
+
+    os.remove(GAN_train_file)
+    os.remove(GAN_test_file)
 
 
 if __name__ == "__main__":
