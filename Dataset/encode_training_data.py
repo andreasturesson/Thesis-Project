@@ -23,11 +23,19 @@ class Data(object):
         """
         self.alphabet = alphabet
         self.alphabet_size = len(self.alphabet)
-        self.dict = {}  # Maps each character to an integer
+        #self.dict = {}  # Maps each character to an integer
+        self.dict = {'UNK': 0, 'a': 1, 'b': 2, 'c': 3, 'd': 4, 'e': 5, 'f': 6, 'g': 7, 'h': 8, 'i': 9,
+                     'j': 10, 'k': 11, 'l': 12, 'm': 13, 'n': 14, 'o': 15, 'p': 16, 'q': 17, 'r': 18, 
+                     's': 19, 't': 20, 'u': 21, 'v': 22, 'w': 23, 'x': 24, 'y': 25, 'z': 26, '0': 27,
+                     '1': 28, '2': 29, '3': 30, '4': 31, '5': 32, '6': 33, '7': 34, '8': 35, '9': 36,
+                     '-': 37, ',': 38, ';': 39, '.': 40, '!': 41, '?': 42, ':': 43, "'": 44, '"': 45,
+                     '/': 46, '\\': 47, '|': 48, '_': 49, '@': 50, '#': 51, '$': 52, '%': 53, '^': 54,
+                     '&': 55, '*': 56, '~': 57, '`': 58, '+': 59, '=': 60, '<': 61, '>': 62,
+                     '(': 63, ')': 64, '[': 65, ']': 66, '{': 67, '}': 68}
         self.no_of_classes = num_of_classes
-        self.dict['UNK'] = 0
-        for idx, char in enumerate(self.alphabet):
-            self.dict[char] = idx + 1
+        #self.dict['UNK'] = 0
+        #for idx, char in enumerate(self.alphabet):
+        #    self.dict[char] = idx + 1
         self.length = input_size
         self.data_source = data_source
         self.data_size = data_size
@@ -120,7 +128,7 @@ def process_data(file):
     reader_file = csv.reader(input_file)
     data_size = len(list(reader_file))-1
 
-    data = Data(file, alphabet, 256, 2, data_size)
+    data = Data(file, alphabet, 75, 2, data_size)
     data.load_data()
     data_X, data_y = data.get_all_data()
 
