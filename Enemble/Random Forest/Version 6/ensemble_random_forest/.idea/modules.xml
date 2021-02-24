@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ensemble_random_forest_dns_tunnelling.iml" filepath="$PROJECT_DIR$/.idea/ensemble_random_forest_dns_tunnelling.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/RandomForest_SimpleTest.iml" filepath="$PROJECT_DIR$/.idea/RandomForest_SimpleTest.iml" />
     </modules>
   </component>
 </project>

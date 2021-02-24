@@ -12,7 +12,7 @@ def randonForest():
     Y = dnsrequest_dataset['label']
     X_training, X_test, Y_training, Y_test = train_test_split(X, Y, test_size= 0.2)
 
-    rfc = RandomForestClassifier(n_estimators= 50)
+    rfc = RandomForestClassifier(n_estimators= 10)
 
     rfc.fit(X_training, Y_training)
     y_predict = rfc.predict(X_test)
