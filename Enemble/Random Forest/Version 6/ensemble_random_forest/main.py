@@ -82,6 +82,7 @@ def metricData(cm):
     print("")
 
 if __name__ == '__main__':
+
     X_train, X_test, Y_train, Y_test = prepareDataset()
 
     randomForest_Result = pd.DataFrame({'Trees': [],
@@ -93,16 +94,16 @@ if __name__ == '__main__':
                            'Precision': [],
                            'Recall': []
                            })
-    n_estimators = [10]
-    max_depths = [10]
-    for y in range(25, 1000, 25):
+    n_estimators = []
+    max_depths = [30, 60, 90]
+    for y in range(800, 1075, 50):
         n_estimators.append(y)
-    for x in range(25, 500, 25):
-        max_depths.append(x)
+    #for x in range(25, 500, 25):
+    #    max_depths.append(x)
     max_depths.append(None)
     # log2=6, sqrt= 7, 10, 13 , 47/3=16, 20,
-    max_features = ['log2', 'sqrt', 10, 13, 16]
-    random_state = [1337]
+    max_features = [13, 15, 18, 21]
+    random_state = [1337, 4553, 412]
     temp = 0
     for n_e, m_d, m_f, r_s in product(n_estimators, max_depths, max_features, random_state):
         model = RandomForestClassifier(n_estimators=n_e, criterion='gini', max_features=m_f, max_depth=m_d
@@ -129,7 +130,7 @@ if __name__ == '__main__':
             print(n_e)
         temp = n_e
 
-    randomForest_Result.to_excel('pic/hora1.xlsx', index=False, header=True)
+    randomForest_Result.to_excel('pic/trial2.xlsx', index=False, header=True)
 
 
 def plot_confusion_matrix():
@@ -192,3 +193,7 @@ def plot():
 
     plt.legend(['Prec', 'Recall', 'F1', 'ACC'], loc='upper left')
     plt.show()
+
+
+
+def
