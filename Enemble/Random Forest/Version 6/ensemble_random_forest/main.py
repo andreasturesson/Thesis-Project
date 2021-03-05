@@ -57,7 +57,6 @@ def printShape(X_train, X_test, Y_train, Y_test):
 
 def metricData(cm):
     # Calculating False Positives (FP), False Negatives (FN), True Positives (TP) & True Negatives (TN)
-    #TODO: Ont i huvudet igen https://scikit-learn.org/stable/modules/generated/sklearn.metrics.confusion_matrix.html#sklearn.metrics.confusion_matrix
 
     TP = cm[1][1]
     FN = cm[1][0]
@@ -193,7 +192,3 @@ def plot():
 
     plt.legend(['Prec', 'Recall', 'F1', 'ACC'], loc='upper left')
     plt.show()
-
-
-
-def
