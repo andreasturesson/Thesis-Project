@@ -447,11 +447,15 @@ def main():
     
     process_data(train_file) 
     process_data(test_file)
-    
-    pd_family_train = pd.read_csv("dataset_ensemble/train_family.csv") 
-    pd_family_test = pd.read_csv("dataset_ensemble/test_family.csv")
+
+    pd_family_train = pd.read_csv("dataset_ensemble/train_family.csv", usecols=["label_multiclass"]) 
+    pd_family_test = pd.read_csv("dataset_ensemble/test_family.csv", usecols=["label_multiclass"])
     pd_train = pd.read_csv("dataset_ensemble/train_dataset.csv")
     pd_test = pd.read_csv("dataset_ensemble/test_dataset.csv") 
+    
+    pd_train = pd_train[pd_train.columns[:-1]]
+    pd_test = pd_test[pd_test.columns[:-1]]
+    
     pd_train.join(pd_family_train)
     pd_multiclass_train = pd_train.join(pd_family_train)
     pd_multiclass_test = pd_test.join(pd_family_test)
