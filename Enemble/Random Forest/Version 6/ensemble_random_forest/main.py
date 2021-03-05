@@ -36,7 +36,6 @@ def prepareDataset():
     dataset = np.array(dataset)
     return train_test_split(dataset, labels, test_size=0.2, random_state=420)
 
-
 def plot_confusion_matrix(cm, classes=None, title='Confusion matrix'):
     """Plots a confusion matrix."""
     if classes is not None:
@@ -80,70 +79,17 @@ def metricData(cm):
     print("The Accuracy of each class is", ACC)
     print("")
 
-if __name__ == '__main__':
+def plot_confusion_matrix(rfc):
 
-    X_train, X_test, Y_train, Y_test = prepareDataset()
+    model.fit(X_train, Y_train)
+    Y_pred = model.predict(X_test)
 
-    randomForest_Result = pd.DataFrame({'Trees': [],
-                           'Depth': [],
-                           'Features': [],
-                           'Random_state': [],
-                           'ACC': [],
-                           'F1_score': [],
-                           'Precision': [],
-                           'Recall': []
-                           })
-    n_estimators = []
-    max_depths = [30, 60, 90]
-    for y in range(800, 1075, 50):
-        n_estimators.append(y)
-    #for x in range(25, 500, 25):
-    #    max_depths.append(x)
-    max_depths.append(None)
-    # log2=6, sqrt= 7, 10, 13 , 47/3=16, 20,
-    max_features = [13, 15, 18, 21]
-    random_state = [1337, 4553, 412]
-    temp = 0
-    for n_e, m_d, m_f, r_s in product(n_estimators, max_depths, max_features, random_state):
-        model = RandomForestClassifier(n_estimators=n_e, criterion='gini', max_features=m_f, max_depth=m_d
-                                       , n_jobs=-1, random_state=r_s)
-        model.fit(X_train, Y_train)
-        prediction_test = model.predict(X=X_test)
-        cm = confusion_matrix(Y_test, prediction_test)
-        TP = cm[1][1]
-        FN = cm[1][0]
-        FP = cm[0][1]
-        TN = cm[0][0]
-        temp_df = pd.DataFrame({'Trees': [n_e],
-                                'Depth': [m_d],
-                                'Features': [m_f],
-                                'Random_state': [r_s],
-                                'ACC': [((TP + TN) / (TP + FP + FN + TN))],
-                                'F1_score': [(2 * (((TP / (TP + FP)) * (TP / (TP + FN))) / ((TP / (TP + FP)) + (TP / (TP + FN)))))],
-                                'Precision': [(TP / (TP + FP))],
-                                'Recall': [(TP / (TP + FN))]
-                                })
-        randomForest_Result = randomForest_Result.append(temp_df, ignore_index=True)
-
-        if temp != n_e:
-            print(n_e)
-        temp = n_e
-
-    randomForest_Result.to_excel('pic/trial2.xlsx', index=False, header=True)
-
-
-def plot_confusion_matrix():
-    #model = RandomForestClassifier(n_estimators=100, bootstrap=True, max_features='sqrt', criterion='gini', max_depth=150
-    #                               , random_state=420)
-    #model.fit(X_train, Y_train)
-    #Y_pred = model.predict(X_test)
-
-    #cm = confusion_matrix(Y_test, Y_pred)
-    #cm_norm = cm / cm.sum(axis=1)[:, np.newaxis]
-    #print(cm)
-    #print(cm_norm)
-    #plt.figure()
-    #plot_confusion_matrix(cm_norm, classes=model.classes_)
+    cm = confusion_matrix(Y_test, Y_pred)
+    cm_norm = cm / cm.sum(axis=1)[:, np.newaxis]
+    print(cm)
+    print(cm_norm)
+    plt.figure()
+    plot_confusion_matrix(cm_norm, classes=model.classes_)
     pass
 
 def VideoGuide():
@@ -158,37 +104,92 @@ def VideoGuide():
     pass
 
 def plot():
-    plot_precision = []
-    plot_recall = []
-    plot_F1_score = []
-    plot_ACC = []
-    x_estimators = np.array([])
+    # plot_precision = []
+    # plot_recall = []
+    # plot_F1_score = []
+    # plot_ACC = []
+    # x_estimators = np.array([])
+    #
+    # n_estimators = [10, 25, 50, 75, 100]
+    # max_features = 'sqrt'
+    # max_depths = [25, 50, 75, 100, None]
+    # for n_e, m_d in product(n_estimators, max_depths):
+    #     model = RandomForestClassifier(n_estimators=n_e, criterion='gini', max_features='sqrt', max_depth=m_d
+    #                                    , n_jobs=5, random_state=420)
+    #     model.fit(X_train, Y_train)
+    #     prediction_test = model.predict(X=X_test)
+    #     cm = confusion_matrix(Y_test, prediction_test)
+    #     TP = cm[1][1]
+    #     FN = cm[1][0]
+    #     FP = cm[0][1]
+    #     TN = cm[0][0]
+    #     plot_precision.append(TP / (TP + FP))
+    #     plot_recall.append(TP / (TP + FN))
+    #     plot_F1_score.append(2 * (((TP / (TP + FP)) * (TP / (TP + FN))) / ((TP / (TP + FP)) + (TP / (TP + FN)))))
+    #     plot_ACC.append((TP + TN) / (TP + FP + FN + TN))
+    #     x_estimators = np.append(x_estimators, n_e)
+    #     print(n_e)
+    #
+    # plt.plot(x_estimators, plot_precision)
+    # plt.plot(x_estimators, plot_recall)
+    # plt.plot(x_estimators, plot_F1_score)
+    # plt.plot(x_estimators, plot_ACC)
+    # plt.xticks(np.arange(min(x_estimators)-10, max(x_estimators) + 100, 100.0))
+    #
+    # plt.legend(['Prec', 'Recall', 'F1', 'ACC'], loc='upper left')
+    # plt.show()
+    pass
 
-    n_estimators = [10, 25, 50, 75, 100]
-    max_features = 'sqrt'
-    max_depths = [25, 50, 75, 100, None]
-    for n_e, m_d in product(n_estimators, max_depths):
-        model = RandomForestClassifier(n_estimators=n_e, criterion='gini', max_features='sqrt', max_depth=m_d
-                                       , n_jobs=5, random_state=420)
-        model.fit(X_train, Y_train)
-        prediction_test = model.predict(X=X_test)
-        cm = confusion_matrix(Y_test, prediction_test)
-        TP = cm[1][1]
-        FN = cm[1][0]
-        FP = cm[0][1]
-        TN = cm[0][0]
-        plot_precision.append(TP / (TP + FP))
-        plot_recall.append(TP / (TP + FN))
-        plot_F1_score.append(2 * (((TP / (TP + FP)) * (TP / (TP + FN))) / ((TP / (TP + FP)) + (TP / (TP + FN)))))
-        plot_ACC.append((TP + TN) / (TP + FP + FN + TN))
-        x_estimators = np.append(x_estimators, n_e)
-        print(n_e)
+def writeResultToExcel():
+        X_train, X_test, Y_train, Y_test = prepareDataset()
 
-    plt.plot(x_estimators, plot_precision)
-    plt.plot(x_estimators, plot_recall)
-    plt.plot(x_estimators, plot_F1_score)
-    plt.plot(x_estimators, plot_ACC)
-    plt.xticks(np.arange(min(x_estimators)-10, max(x_estimators) + 100, 100.0))
+        randomForest_Result = pd.DataFrame({'Trees': [],
+                                            'Depth': [],
+                                            'Features': [],
+                                            'Random_state': [],
+                                            'ACC': [],
+                                            'F1_score': [],
+                                            'Precision': [],
+                                            'Recall': []
+                                            })
+        n_estimators = []
+        max_depths = [30, 60, 90]
+        for y in range(800, 1075, 50):
+            n_estimators.append(y)
+        # for x in range(25, 500, 25):
+        #    max_depths.append(x)
+        max_depths.append(None)
+        # log2=6, sqrt= 7, 10, 13 , 47/3=16, 20,
+        max_features = [13, 15, 18, 21]
+        random_state = [1337, 4553, 412]
+        temp = 0
+        for n_e, m_d, m_f, r_s in product(n_estimators, max_depths, max_features, random_state):
+            model = RandomForestClassifier(n_estimators=n_e, criterion='gini', max_features=m_f, max_depth=m_d
+                                           , n_jobs=-1, random_state=r_s)
+            model.fit(X_train, Y_train)
+            prediction_test = model.predict(X=X_test)
+            cm = confusion_matrix(Y_test, prediction_test)
+            TP = cm[1][1]
+            FN = cm[1][0]
+            FP = cm[0][1]
+            TN = cm[0][0]
+            temp_df = pd.DataFrame({'Trees': [n_e],
+                                    'Depth': [m_d],
+                                    'Features': [m_f],
+                                    'Random_state': [r_s],
+                                    'ACC': [((TP + TN) / (TP + FP + FN + TN))],
+                                    'F1_score': [(2 * (((TP / (TP + FP)) * (TP / (TP + FN))) / (
+                                            (TP / (TP + FP)) + (TP / (TP + FN)))))],
+                                    'Precision': [(TP / (TP + FP))],
+                                    'Recall': [(TP / (TP + FN))]
+                                    })
+            randomForest_Result = randomForest_Result.append(temp_df, ignore_index=True)
 
-    plt.legend(['Prec', 'Recall', 'F1', 'ACC'], loc='upper left')
-    plt.show()
+            if temp != n_e:
+                print(n_e)
+            temp = n_e
+
+        randomForest_Result.to_excel('pic/trial2.xlsx', index=False, header=True)
+
+if __name__ == '__main__':
+    X_train, X_test, Y_train, Y_test = prepareDataset()
