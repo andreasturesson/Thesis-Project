@@ -1,6 +1,6 @@
 from functools import reduce
+from sklearn.model_selection import train_test_split
 import pandas as pd
-import numpy as np
 import glob
 
 # Inspired by https://github.com/netrack/learn/blob/master/dns/make_multilabel_sets.py
@@ -144,23 +144,50 @@ def combine_DGA_traffic(DGA_paths, normal_paths):
     grouped = df_combined.groupby("label")
     df_train = grouped.apply(lambda x: x.sample(n=lowest_count, replace=False, random_state=2)).reset_index(drop=True)
 
-    # Shuffles the data
-    df_train = df_train.sample(frac=1, random_state=3)
-
     # Print count of each family
-    print(f"\n {df_train['family'].nunique()} family count:")
+    print(f"\n {df_train['family'].nunique()} total family count:")
     print("-"*60)
     print(f"{df_train.family.value_counts()} \n")
 
     # Print out final count
     final_DGA_count = len(df_train[df_train["label"] == 1])
     final_normal_count = len(df_train[df_train["label"] == 0])
-    print(f"Final DGA count: {final_DGA_count}.")
-    print(f"Final normal count: {final_normal_count}.")
-    print(f"Complete count: {final_normal_count+final_DGA_count}.")
+    print(f"Total DGA count: {final_DGA_count}.")
+    print(f"Total normal count: {final_normal_count}.")
+    print(f"Total count: {final_normal_count+final_DGA_count}. \n")
 
-    # write data to csv file
-    df_train.to_csv("training_data.csv", index=False, header=True)
+    # Split data into train at test split, shuffles the data with seeding
+    df_train, df_test = train_test_split(df_train, test_size=0.2, random_state=3)
+
+    # write training data to csv file
+    df_train.to_csv("train_data.csv", index=False, header=True)
+
+    # write testing data to csv file
+    df_test.to_csv("test_data.csv", index=False, header=True)
+
+    # Print train count of each family
+    print(f"\n {df_train['family'].nunique()} train family count:")
+    print("-"*60)
+    print(f"{df_train.family.value_counts()} \n")
+
+    # Print out train count
+    final_DGA_count = len(df_train[df_train["label"] == 1])
+    final_normal_count = len(df_train[df_train["label"] == 0])
+    print(f"Train DGA count: {final_DGA_count}.")
+    print(f"Train normal count: {final_normal_count}.")
+    print(f"Train count: {final_normal_count+final_DGA_count}. \n")
+
+    # Print test count of each family
+    print(f"\n {df_test['family'].nunique()} test family count:")
+    print("-"*60)
+    print(f"{df_test.family.value_counts()} \n")
+
+    # Print out test count
+    final_DGA_count = len(df_test[df_test["label"] == 1])
+    final_normal_count = len(df_test[df_test["label"] == 0])
+    print(f"Test DGA count: {final_DGA_count}.")
+    print(f"Test normal count: {final_normal_count}.")
+    print(f"Test count: {final_normal_count+final_DGA_count}.")
 
 
 def main():
