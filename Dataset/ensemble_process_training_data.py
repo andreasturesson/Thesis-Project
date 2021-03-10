@@ -13,17 +13,11 @@ from math import log2
 from tqdm import tqdm
 
 
-# https://www.tutorialspoint.com/find-longest-consecutive-letter-and-digit-substring-in-python 
-
-# Masked ngram:
-# https://github.com/jselvi/docker-r-masked-ngrams/blob/master/data/features_extraction_with_masking.py
-# https://www-sciencedirect-com.libraryproxy.his.se/science/article/pii/S0957417419300648
-
-
 class Ngram(object):
     """
     Class to handle all ngram feature extraction.
     Based on Top 15 features from: https://github.com/jselvi/docker-r-masked-ngrams
+    Paper: https://www-sciencedirect-com.libraryproxy.his.se/science/article/pii/S0957417419300648
     """
     def __init__(self, s):
         self.domain_name = s
@@ -119,7 +113,7 @@ def has_digits_or_punctuation(s):
 
 def get_all_substrings(s):
     """
-    Get all the contiguous substrings in a string
+    Return all the contiguous substrings in a string
     Taken from: https://github.com/alejandro-g-m/DetExt/tree/91a24bd174f599c6d9551f246f81519b274093af
     """
     substrings = []
@@ -131,7 +125,7 @@ def get_all_substrings(s):
 
 def get_longest_meaningful_word(s):
     """
-    Get the longest substring that belongs to the English dictionary
+    Return the longest substring that belongs to the English dictionary
     has_digits_or_punctuation is needed because enchant understands digit
     strings and some symbols as valid words.
     Taken from: https://github.com/alejandro-g-m/DetExt/tree/91a24bd174f599c6d9551f246f81519b274093af
@@ -184,36 +178,29 @@ def unique_chars(s):
     return total_unique_chars
 
 
-def hex_ratio(subdomain, domain):
-    subdomain_domain = (subdomain, domain)
-    subdomain_domain = '.'.join(subdomain_domain)
+def hex_ratio(s):
     total_hex = 0
-    hex_matches = re.findall(r"[0123456789abcdef]+", subdomain_domain) 
+    hex_matches = re.findall(r"[0123456789abcdef]+", s) 
 
     for hex in hex_matches:
         total_hex += len(hex)
-    hex_ratio = total_hex/len(subdomain_domain)
+    hex_ratio = total_hex/len(s)
     return hex_ratio
 
 
-def numbers_ratio(subdomain, domain):
-    subdomain_domain = (subdomain, domain)
-    subdomain_domain = '.'.join(subdomain_domain)
-
-    total_numbers = sum(c.isdigit() for c in subdomain_domain)
-    number_ratio = total_numbers/len(subdomain_domain)
+def numbers_ratio(s):
+    total_numbers = sum(c.isdigit() for c in s)
+    number_ratio = total_numbers/len(s)
     return number_ratio
 
 
-def constant_vowel_ratio(subdomain, domain):
-    subdomain_domain = (subdomain, domain)
-    subdomain_domain = '.'.join(subdomain_domain)
+def constant_vowel_ratio(s):
     total_vowels = 0
     total_constants = 0
 
-    constant_matches = re.findall(r"[bcdfghjklmnpqrstvwxyz]+", subdomain_domain)
+    constant_matches = re.findall(r"[bcdfghjklmnpqrstvwxyz]+", s)
 
-    vowel_matches = re.findall(r"[aeiou]+", subdomain_domain) 
+    vowel_matches = re.findall(r"[aeiou]+", s)
 
     for contants in constant_matches:
         total_constants += len(contants)
@@ -221,8 +208,8 @@ def constant_vowel_ratio(subdomain, domain):
     for vowels in vowel_matches:
         total_vowels += len(vowels)
 
-    constant_ratio = total_constants/len(subdomain_domain)    
-    vowels_ratio = total_vowels/len(subdomain_domain)
+    constant_ratio = total_constants/len(s) 
+    vowels_ratio = total_vowels/len(s)
     return vowels_ratio, constant_ratio
 
 
@@ -241,7 +228,12 @@ def longest_vowel_constant_sequence(s):
     return longest_vowelSeq, longest_constantSeq
 
 
-def longest_number_sequence(s): 
+def longest_number_sequence(s):
+    """
+    It returns longest number sequence in a string.
+    For example 'cool123freezers928418' would return '928414'.
+    Taken from: https://github.com/alejandro-g-m/DetExt/tree/91a24bd174f599c6d9551f246f81519b274093af
+    """
     longest_letterSeq = ''
     longest_digitSeq = ''
     i = 0
@@ -250,18 +242,14 @@ def longest_number_sequence(s):
         curr_letterSeq = ''
         curr_digitSeq = ''
 
-        # For letter substring
         while(i<len(s) and s[i].isalpha()): 
             curr_letterSeq += s[i] 
             i += 1
 
-        # For digit substring 
         while(i<len(s) and s[i].isdigit()): 
             curr_digitSeq += s[i] 
             i += 1
-
-        # Case handling if the character  
-        # is neither letter nor digit     
+   
         if(i< len(s) and not(s[i].isdigit()) and not(s[i].isalpha())):
             i += 1
 
@@ -313,38 +301,38 @@ def pair_number_letter(string):
     return AH_counter, HO_counter, OV_counter, VZ_counter """
 
 
-def pair_alphabet_small_gap(string):
+def pair_alphabet_small_gap(s):
     domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-    for idx, char in enumerate(string):
+    for idx, char in enumerate(s):
         if (int(ord(char)) >= 97 and int(ord(char)) <= 122):
-            if idx != len(string)-1:
-                if (int(ord(string[idx+1])) >= 97 and int(ord(string[idx+1])) <= 122):
-                    if bool(re.search('[a-d]', char)) and bool(re.search('[a-d]', string[idx+1])):
+            if idx != len(s)-1:
+                if (int(ord(s[idx+1])) >= 97 and int(ord(s[idx+1])) <= 122):
+                    if bool(re.search('[a-d]', char)) and bool(re.search('[a-d]', s[idx+1])):
                         domain_AD_pair += 1
-                    if bool(re.search('[d-g]', char)) and bool(re.search('[d-g]', string[idx+1])):
+                    if bool(re.search('[d-g]', char)) and bool(re.search('[d-g]', s[idx+1])):
                         domain_DG_pair += 1
-                    if bool(re.search('[g-j]', char)) and bool(re.search('[g-j]', string[idx+1])):
+                    if bool(re.search('[g-j]', char)) and bool(re.search('[g-j]', s[idx+1])):
                         domain_GJ_pair += 1
-                    if bool(re.search('[j-m]', char)) and bool(re.search('[j-m]', string[idx+1])):
+                    if bool(re.search('[j-m]', char)) and bool(re.search('[j-m]', s[idx+1])):
                         domain_JM_pair += 1
-                    if bool(re.search('[m-p]', char)) and bool(re.search('[m-p]', string[idx+1])):
+                    if bool(re.search('[m-p]', char)) and bool(re.search('[m-p]', s[idx+1])):
                         domain_MP_pair += 1
-                    if bool(re.search('[p-s]', char)) and bool(re.search('[p-s]', string[idx+1])):
+                    if bool(re.search('[p-s]', char)) and bool(re.search('[p-s]', s[idx+1])):
                         domain_PS_pair += 1
-                    if bool(re.search('[s-v]', char)) and bool(re.search('[s-v]', string[idx+1])):
+                    if bool(re.search('[s-v]', char)) and bool(re.search('[s-v]', s[idx+1])):
                         domain_SV_pair += 1
-                    if bool(re.search('[v-y]', char)) and bool(re.search('[v-y]', string[idx+1])):
+                    if bool(re.search('[v-y]', char)) and bool(re.search('[v-y]', s[idx+1])):
                         domain_VY_pair += 1
-                    if bool(re.search('[v-z]', char)) and bool(re.search('[v-z]', string[idx+1])):
+                    if bool(re.search('[v-z]', char)) and bool(re.search('[v-z]', s[idx+1])):
                         domain_YZ_pair += 1
     return domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair
 
 
-def alphabet_large_gap(string):
+def alphabet_large_gap(s):
     AH_counter, HO_counter, OV_counter, VZ_counter = 0, 0, 0, 0
 
-    for char in string:
+    for char in s:
         if (int(ord(char)) >= 97 and int(ord(char)) <= 122):
             if bool(re.search('[a-h]', char)):
                 AH_counter += 1
@@ -357,10 +345,10 @@ def alphabet_large_gap(string):
     return AH_counter, HO_counter, OV_counter, VZ_counter 
 
 
-def alphabet_small_gap(string):
+def alphabet_small_gap(s):
     domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-    for char in string:
+    for char in s:
         if (int(ord(char)) >= 97 and int(ord(char)) <= 122):
             if bool(re.search('[a-d]', char)):
                 domain_AD += 1
@@ -383,27 +371,27 @@ def alphabet_small_gap(string):
     return domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ
 
 
-def charCheck(input_char):
+def charCheck(s):
     # CHECKING FOR ALPHABET LOWERCASE
-    if (int(ord(input_char)) >= 97 and int(ord(input_char)) <= 122):
+    if (int(ord(s)) >= 97 and int(ord(s)) <= 122):
         # lowercase_letters += 1
         return 1
     # CHECKING FOR ALPHABET UPPERCASE
-    if ((int(ord(input_char)) >= 65 and int(ord(input_char)) <= 90)):
+    if ((int(ord(s)) >= 65 and int(ord(s)) <= 90)):
         # uppercase_letters += 1
         return 2
     # CHECKING FOR DIGITS  
-    if (int(ord(input_char)) >= 48 and int(ord(input_char)) <= 57):
+    if (int(ord(s)) >= 48 and int(ord(s)) <= 57):
         # digits += 1
         return 3
     # CHECKING FOR dot
-    if (int(ord(input_char)) == 46):
+    if (int(ord(s)) == 46):
         # dots += 1
         return 4
     # OTHERWISE SPECIAL CHARACTER  
-    if not((((int(ord(input_char)) >= 97 and int(ord(input_char)) <= 122)) or (((int(ord(input_char)) >= 65 and int(ord(input_char)) <= 90)) or ((int(ord(input_char)) >= 48 and int(ord(input_char)) <= 57)) or (int(ord(input_char)) == 46)))):
+    if not((((int(ord(s)) >= 97 and int(ord(s)) <= 122)) or (((int(ord(s)) >= 65 and int(ord(s)) <= 90)) or ((int(ord(s)) >= 48 and int(ord(s)) <= 57)) or (int(ord(s)) == 46)))):
         # special_characters += 1
-        if input_char != "-" or input_char != ".":
+        if s != "-" or s != ".":
             return 5
 
 
@@ -417,8 +405,8 @@ def process_data(file):
 
     with open(os.path.join("dataset_ensemble/", f"{file_type}_dataset.csv"), "w+") as csvfile:
         csvwriter = csv.writer(csvfile)
-        csvwriter.writerow(["domain_total", "domain_tokens", "domain_letters", "domain_special", "domain_letters_number_sum",
-                            "domain_letterNumber", "domain_numberLetter",
+        csvwriter.writerow(["sld_total", "sld_tokens", "sld_letters", "sld_special", "sld_letters_number_sum",
+                            "sld_letterNumber", "sld_numberLetter",
                             "vowel_ratio", "constant_ratio", "hexadecimal_ratio", "lng_meaningful_word_ratio", 
                             "one_gram_mean", "one_gram_var", "one_gram_std",
                             "two_gram_mean", "two_gram_var", "two_gram_std",
@@ -427,82 +415,78 @@ def process_data(file):
                             "shannon_entropy",
                             "ngram_ccc", "ngram_cvc", "ngram_vcc", "ngram_vcv", "ngram_cv", "ngram_vc", "ngram_cc", "ngram_c", "ngram_v",
                             #"domain_AH", "domain_HO", "domain_OV", "domain_VZ",
-                            "domain_AD", "domain_DG", "domain_GJ", "domain_JM", "domain_MP", "domain_PS", "domain_SV", "domain_VY", "domain_YZ",
+                            "sld_AD", "sld_DG", "sld_GJ", "sld_JM", "sld_MP", "sld_PS", "sld_SV", "sld_VY", "sld_YZ",
                             #"domain_AH_pair", "domain_HO_pair", "domain_OV_pair", "domain_VZ_pair",
                             #"domain_AD_pair", "domain_DG_pair", "domain_GJ_pair", "domain_JM_pair", "domain_MP_pair", "domain_PS_pair", "domain_SV_pair", "domain_VY_pair", "domain_YZ_pair",
                             #"domain_lng_numb_seq", 
-                            "domain_lng_vowel_seq", "domain_lng_constant_seq",
-                            "domain_uniq_chars", "domain_uniq_numbers",
+                            "sld_lng_vowel_seq", "sld_lng_constant_seq",
+                            "sld_uniq_chars", "sld_uniq_numbers",
                             #"subdomain_total", "subdomain_tokens", "subdomain_letters", #"subdomain_numbers", "subdomain_special",
                             #"subdomain_uniq_chars", "subdomain_uniq_numbers",
                             #"subdomain_letterNumber", "subdomain_numberLetter", 
                             #"subdomain_AH", "subdomain_HO", "subdomain_OV", "subdomain_VZ",
                             #"subdomain_AM", "subdomain_MZ",
                             #"subdomain_AH_pair", "subdomain_HO_pair", "subdomain_OV_pair", "subdomain_VZ_pair",
-                            "suffix_total", "suffix_hash", "suffix_AH", "suffix_HO", "suffix_OV", "suffix_VZ",
+                            "tld_total", "tld_hash", "tld_AH", "tld_HO", "tld_OV", "tld_VZ",
                             "label"])
         
         with tqdm(total=len(dataframe.qname)) as progress_bar:
             for row in dataframe.itertuples():
                 label, qname = "", ""
-                subdomain, domain, fqdn, suffix = "", "", "", ""
+                domain_name, sld, subdomain, tld = "", "", "", ""
 
-                # Domain + subdomain values
+                # Domain_name features
                 total_character, letters, numbers, dots, special_characters = 0, 0, 0, 0, 0
-                vowel_ratio, constant_ratio, number_ratio, hexadecimal_ratio, special_ratio, lng_meaningful_word_ratio = 0, 0, 0, 0, 0, 0
+                lng_meaningful_word_ratio = 0, 
+                shannon_entropy = 0
                 one_gram_mean, one_gram_var, one_gram_std = 0, 0, 0
                 two_gram_mean, two_gram_var, two_gram_std = 0, 0, 0
+                ngram_ccc, ngram_cvc, ngram_vcc, ngram_vcv, ngram_cv, ngram_vc, ngram_cc, ngram_c, ngram_v = 0, 0, 0, 0, 0, 0, 0, 0, 0
+                
+                # sld = subdomain features
+                vowel_ratio, constant_ratio, number_ratio, hexadecimal_ratio, special_ratio = 0, 0, 0, 0, 0
                 two_gram_circular_mean, two_gram_circular_var, two_gram_circular_std = 0, 0, 0
                 three_gram_circular_mean, three_gram_circular_var, three_gram_circular_std = 0, 0, 0
-                ngram_ccc, ngram_cvc, ngram_vcc, ngram_vcv, ngram_cv, ngram_vc, ngram_cc, ngram_c, ngram_v = 0, 0, 0, 0, 0, 0, 0, 0, 0
-                shannon_entropy = 0
+                
+                # sld features
+                sld_total, sld_tokens, sld_letters, sld_numbers, sld_special = 0, 0, 0, 0, 0
+                sld_lng_vowel_seq, sld_lng_constant_seq, sld_lng_numb_seq = 0, 0, 0
+                sld_letterNumber, sld_numberLetter = 0, 0
+                sld_uniq_chars, sld_uniq_numbers = 0, 0
+                sld_AD, sld_DG, sld_GJ, sld_JM, sld_MP, sld_PS, sld_SV, sld_VY, sld_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
+                sld_AD_pair, sld_DG_pair, sld_GJ_pair, sld_JM_pair, sld_MP_pair, sld_PS_pair, sld_SV_pair, sld_VY_pair, sld_YZ_pair = 0, 0, 0, 0, 0, 0, 0, 0, 0
 
-                # Domain values
-                domain_total, domain_tokens, domain_letters, domain_numbers, domain_special = 0, 0, 0, 0, 0
-                domain_lng_vowel_seq, domain_lng_constant_seq, domain_lng_numb_seq = 0, 0, 0
-                domain_letterNumber, domain_numberLetter = 0, 0
-                domain_uniq_chars, domain_uniq_numbers = 0, 0
-                domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
-                domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY, domain_YZ = 0, 0, 0, 0, 0, 0, 0, 0, 0
-
-                # Subdomain values
+                # subdomain features
                 subdomain_total, subdomain_tokens, subdomain_letters, subdomain_numbers, subdomain_special = 0, 0, 0, 0, 0
                 subdomain_uniq_chars, subdomain_uniq_numbers = 0, 0
                 #subdomain_letterNumber, subdomain_numberLetter = 0, 0
                 #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ = 0, 0, 0, 0
                 #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair = 0, 0, 0, 0
 
-                # Suffix values
+                # suffix features
                 suffix_total, suffix_hash, suffix_AH, suffix_HO, suffix_OV, suffix_VZ = 0, 0, 0, 0, 0, 0
 
                 label = row.label
                 qname = row.qname
                 
-
                 ext = tldextract.extract(qname)
-                fqdn = ext.fqdn
-                domain = ext.domain
-                suffix = ext.suffix
+                domain_name = qname
+                #domain = ext.domain
+                sld = ext.domain
+                tld = ext.suffix
                 subdomain = ext.subdomain
-                subdomain_domain = (subdomain, domain)
-                subdomain_domain = '.'.join(subdomain_domain)
-
-                vowel_ratio, constant_ratio = constant_vowel_ratio(domain, subdomain)
-                number_ratio = numbers_ratio(domain, subdomain)
-                hexadecimal_ratio = hex_ratio(domain, subdomain)
-                shannon_entropy =  get_entropy(qname)
-                lng_meaningful_word_ratio = get_longest_meaningful_word_ratio(qname)
+                #sld_subdomain = (subdomain, sld)
+                #sld_subdomain = '.'.join(sld_subdomain)
+                sld_subdomain = (subdomain, sld)
+                sld_subdomain = '.'.join(sld_subdomain)
                 
-                # inputstr.rsplit('.', 1)[0]
-                if(len(subdomain+domain) > 4):
-                    c = Counter(subdomain+domain)
-                    if len(c) != 1:
-                        ngram = Ngram(subdomain+domain)
-                        two_gram_circular_mean, two_gram_circular_var, two_gram_circular_std = ngram.get_two_gram_circular()
-                        three_gram_circular_mean, three_gram_circular_var, three_gram_circular_std = ngram.get_three_gram_circular()
-                        del ngram 
-
-                ngram = Ngram(qname)
+                
+                #------------------------------ domain_name ------------------------------ #
+                
+                lng_meaningful_word_ratio = get_longest_meaningful_word_ratio(domain_name)
+                shannon_entropy =  get_entropy(domain_name)
+                
+                ngram = Ngram(domain_name)
                 one_gram_mean, one_gram_var, one_gram_std = ngram.get_one_gram()
                 two_gram_mean, two_gram_var, two_gram_std = ngram.get_two_gram()
                 ngram_dict = ngram.get_occurance_ngram()
@@ -516,18 +500,36 @@ def process_data(file):
                 ngram_c = ngram_dict["c"]
                 ngram_v = ngram_dict["v"]
                 del ngram
+                
+                #------------------------------ sld + subdomain ------------------------------ #
 
-                domain_total = len(domain)
-                domain_letterNumber = pair_letter_number(domain)
-                domain_numberLetter = pair_number_letter(domain)
-                domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ = alphabet_small_gap(domain)
-                domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair = pair_alphabet_small_gap(domain)
-                domain_lng_numb_seq = longest_number_sequence(domain)
-                domain_lng_vowel_seq, domain_lng_constant_seq = longest_vowel_constant_sequence(domain)
-                domain_uniq_chars = unique_chars(domain)
-                domain_uniq_numbers = unique_numbers(domain)
-                domain_tokens = number_tokens(domain)
-    
+                vowel_ratio, constant_ratio = constant_vowel_ratio(sld_subdomain)
+                number_ratio = numbers_ratio(sld_subdomain)
+                hexadecimal_ratio = hex_ratio(sld_subdomain)
+                
+                
+                if(len(sld+subdomain) > 4):
+                    c = Counter(sld+subdomain)
+                    if len(c) != 1:
+                        ngram = Ngram(sld+subdomain)
+                        two_gram_circular_mean, two_gram_circular_var, two_gram_circular_std = ngram.get_two_gram_circular()
+                        three_gram_circular_mean, three_gram_circular_var, three_gram_circular_std = ngram.get_three_gram_circular()
+                        del ngram 
+
+                #------------------------------ sld ------------------------------ #
+
+                sld_total = len(sld)
+                sld_letterNumber = pair_letter_number(sld)
+                sld_numberLetter = pair_number_letter(sld)
+                sld_AD, sld_DG, sld_GJ, sld_JM, sld_MP, sld_PS, sld_SV, sld_VY, sld_YZ = alphabet_small_gap(sld)
+                sld_AD_pair, sld_DG_pair, sld_GJ_pair, sld_JM_pair, sld_MP_pair, sld_PS_pair, sld_SV_pair, sld_VY_pair, sld_YZ_pair = pair_alphabet_small_gap(sld)
+                sld_lng_numb_seq = longest_number_sequence(sld)
+                sld_lng_vowel_seq, sld_lng_constant_seq = longest_vowel_constant_sequence(sld)
+                sld_uniq_chars = unique_chars(sld)
+                sld_uniq_numbers = unique_numbers(sld)
+                sld_tokens = number_tokens(sld)
+
+                #------------------------------ subdomain ------------------------------ #
                 
                 #subdomain_letterNumber = letterNumberCheck(subdomain)
                 #subdomain_numberLetter = numberLetterCheck(subdomain)
@@ -538,16 +540,15 @@ def process_data(file):
                 subdomain_uniq_numbers = unique_numbers(subdomain)
                 subdomain_tokens = number_tokens(subdomain)
                 
-                suffix_total = len(suffix)
-                suffix_AH, suffix_HO, suffix_OV, suffix_VZ = alphabet_large_gap(suffix)
-                suffix_hash = suffix_hashing(suffix)
+                #------------------------------ tld ------------------------------ #
+                
+                tld_total = len(tld)
+                tld_AH, tld_HO, tld_OV, tld_VZ = alphabet_large_gap(tld)
+                tld_hash = suffix_hashing(tld)
 
-                if type(fqdn) != float:
-                    total_character = len(subdomain_domain)
-                else:
-                    continue
+                #------------------------------ mix ------------------------------ #
 
-                for char in subdomain_domain:
+                for char in domain_name:
                     char_type = charCheck(char)
                     if char_type == 1:
                         letters += 1
@@ -561,17 +562,17 @@ def process_data(file):
                     elif char_type == 5:
                         special_characters += 1
 
-                for char in domain:
+                for char in sld:
                     char_type = charCheck(char)
                     if char_type == 1:
-                        domain_letters += 1
+                        sld_letters += 1
                     elif char_type == 2:
                         # Uppecase does not exist, keep this just in case for later
-                        domain_letters += 1
+                        sld_letters += 1
                     elif char_type == 3:
-                        domain_numbers += 1
+                        sld_numbers += 1
                     elif char_type == 5:
-                        domain_special += 1
+                        sld_special += 1
 
                 for char in subdomain:
                     char_type = charCheck(char)
@@ -586,34 +587,10 @@ def process_data(file):
                         subdomain_special += 1
                         
                 progress_bar.update(1)
-                # feature
-        # domain_AD_pair               0.008449
-        # domain_DG_pair               0.006719
-        # domain_GJ_pair               0.005436
-        # domain_JM_pair               0.003516
-        # domain_MP_pair               0.007397
-        # domain_PS_pair               0.004607
-        # domain_SV_pair               0.007479
-        # domain_YZ_pair               0.004903
-        # domain_lng_numb_seq          0.002810
-        # domain_numbers               0.007817
-        # dots                         0.000004
-        # number_ratio                 0.004982
-        # subdomain_letters            0.003888
-        # subdomain_tokens             0.003013
-        # subdomain_total              0.003904
-        # subdomain_uniq_chars         0.003091
-        # subdomain_uniq_numbers       0.000226
-        # suffix_VZ                    0.004857
-        # three_gram_circular_std      0.004262
-        # two_gram_circular_std        0.006934
-        # two_gram_circular_var        0.006859
-        # two_gram_mean                0.004986 SKIP
-        # two_gram_std                 0.005001 SKIP
-        # two_gram_var                 0.004990 SKIP
+     
                 
-                csvwriter.writerow([domain_total, domain_tokens, domain_letters, domain_special, domain_letters+domain_numbers,
-                                    domain_letterNumber, domain_numberLetter,
+                csvwriter.writerow([sld_total, sld_tokens, sld_letters, sld_special, sld_letters+sld_numbers,
+                                    sld_letterNumber, sld_numberLetter,
                                     vowel_ratio, constant_ratio, hexadecimal_ratio, lng_meaningful_word_ratio,
                                     one_gram_mean, one_gram_var, one_gram_std,
                                     two_gram_mean, two_gram_var, two_gram_std,
@@ -622,19 +599,19 @@ def process_data(file):
                                     shannon_entropy,
                                     ngram_ccc, ngram_cvc, ngram_vcc, ngram_vcv, ngram_cv, ngram_vc, ngram_cc, ngram_c, ngram_v,
                                     #domain_AH, domain_HO, domain_OV, domain_VZ,
-                                    domain_AD, domain_DG, domain_GJ, domain_JM, domain_MP, domain_PS, domain_SV, domain_VY, domain_YZ,
+                                    sld_AD, sld_DG, sld_GJ, sld_JM, sld_MP, sld_PS, sld_SV, sld_VY, sld_YZ,
                                     #domain_AH_pair, domain_HO_pair, domain_OV_pair, domain_VZ_pair,
                                     #domain_AD_pair, domain_DG_pair, domain_GJ_pair, domain_JM_pair, domain_MP_pair, domain_PS_pair, domain_SV_pair, domain_VY_pair, domain_YZ_pair,
                                     #domain_lng_numb_seq, 
-                                    domain_lng_vowel_seq, domain_lng_constant_seq,
-                                    domain_uniq_chars, domain_uniq_numbers,
+                                    sld_lng_vowel_seq, sld_lng_constant_seq,
+                                    sld_uniq_chars, sld_uniq_numbers,
                                     #subdomain_total, subdomain_tokens, subdomain_letters, #subdomain_numbers, subdomain_special,
                                     #subdomain_uniq_chars, subdomain_uniq_numbers,
                                     #subdomain_letterNumber, subdomain_numberLetter,
                                     #subdomain_AH, subdomain_HO, subdomain_OV, subdomain_VZ,
                                     #subdomain_AM, subdomain_MZ,
                                     #subdomain_AH_pair, subdomain_HO_pair, subdomain_OV_pair, subdomain_VZ_pair,
-                                    suffix_total, suffix_hash, suffix_AH, suffix_HO, suffix_OV, suffix_VZ,
+                                    tld_total, tld_hash, tld_AH, tld_HO, tld_OV, tld_VZ,
                                     label])
                 
 
