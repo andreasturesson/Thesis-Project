@@ -11,7 +11,7 @@ Source: https://www.udemy.com/course/decision-tree-and-random-forest-python-from
 
 class RandomForest:
 
-    def __init__(self, DATASET, TEST_SIZE = 0.2, RANDOM_SUBSPACE = 10, FOREST_SIZE = 15, MAX_DEPTH = 1000, BOOTSTRAP_SAMPLE_SIZE = 0.33, EPOCH = 1, details =False):
+    def __init__(self, DATASET, TEST_SIZE = 0.2, RANDOM_SUBSPACE = 10, FOREST_SIZE = 15, MAX_DEPTH = 1000, BOOTSTRAP_SAMPLE_SIZE = 1, EPOCH = 1, details =False):
         self.TEST_SIZE = TEST_SIZE
         self.RANDOM_SUBSPACE = RANDOM_SUBSPACE  # n/3  or Root(n)
         self.FOREST_SIZE = FOREST_SIZE

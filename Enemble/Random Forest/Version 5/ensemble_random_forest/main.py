@@ -8,7 +8,7 @@ Source: https://www.udemy.com/course/decision-tree-and-random-forest-python-from
 if __name__ == '__main__':
     databas = "../../../../Dataset/dataset_ensemble/4.0/dataset_4.1_sliced.csv"
     #rfa0 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=1, MAX_DEPTH= 50)
-    rfa1 = rf.RandomForest(DATASET=databas, FOREST_SIZE=50, MAX_DEPTH=-1)
+    rfa1 = rf.RandomForest(DATASET=databas, FOREST_SIZE=10, MAX_DEPTH=500)
     '''
     rfa2 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=10, MAX_DEPTH= 50)
     rfa3 = rf.RandomForest(DATASET="dataset_3.1.csv", FOREST_SIZE=25, MAX_DEPTH= 50)
