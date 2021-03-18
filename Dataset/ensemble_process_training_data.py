@@ -587,7 +587,7 @@ def process_data(file):
                         subdomain_special += 1
                         
                 progress_bar.update(1)
-     
+                
                 
                 csvwriter.writerow([sld_total, sld_tokens, sld_letters, sld_special, sld_letters+sld_numbers,
                                     sld_letterNumber, sld_numberLetter,
