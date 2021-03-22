@@ -1,3 +1,3 @@
 # Thesis-Project
 
-Hej svejs
+Code for our thesis project
