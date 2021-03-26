@@ -17,7 +17,7 @@ sns.set(rc={'figure.figsize': (8, 6)})
 warnings.filterwarnings('ignore')
 
 PATH = 'C:\\Users\\Jonathan\\Thesis-Project\Enemble\\Random Forest\\Version 6\\ensemble_random_forest\\pic\\'
-Image(filename=PATH + "Machine Learning.png", width=900, height=900)
+
 class_names = ["Alexa_Majestic",
                                 "kraken_v2",
                                 "ramnit",
@@ -188,15 +188,16 @@ def multi_clssification_misslcassified():
 def writeResultToConsole():
     X_train, X_test, Y_train, Y_test = prepareDataset()
 
+
     # log2=6, sqrt= 7, 10, 13 , 47/3=16, 20,
-    max_features = ['log2', 'sqrt', 11]
+    max_features = [17, 20]
     random_state = [1337]
     n_estimators = [500]
-    max_depths = [50, 100, 150]
-    temp = 0
+    max_depths = [30, 60]
+
     for n_e, m_d, m_f, r_s in product(n_estimators, max_depths, max_features, random_state):
         model = RandomForestClassifier(n_estimators=n_e, criterion='gini', max_features=m_f, max_depth=m_d
-                                       , n_jobs=-1, random_state=r_s)
+                                       , n_jobs=-1)
         model.fit(X_train, Y_train)
         prediction_test = model.predict(X=X_test)
         cm = confusion_matrix(Y_test, prediction_test)
@@ -204,6 +205,7 @@ def writeResultToConsole():
         FN = cm[1][0]
         FP = cm[0][1]
         TN = cm[0][0]
+
         print('Trees: ', n_e)
         print('Depth: ', m_d)
         print('Features: ', m_f)
@@ -212,14 +214,11 @@ def writeResultToConsole():
         print('F1_score: ', (2 * (((TP / (TP + FP)) * (TP / (TP + FN))) / ((TP / (TP + FP)) + (TP / (TP + FN))))))
         print('Precision: ', (TP / (TP + FP)))
         print('Recall: ', (TP / (TP + FN)))
-
-        if temp != n_e:
-            print(n_e)
-        temp = n_e
+        print('----------------------------------------------------------------------------------------')
 
 def getMeanFromDifferentRandomSeeds():
     # Excel sheet with different random seeds
-    excel_sheet_with_random_seed = pd.read_excel('pic/trial2.xlsx')
+    excel_sheet_with_random_seed = pd.read_excel('pic/trial3.xlsx')
     # Arrays to find all unique values for tree, depth and features
     unique_trees = np.array([])
     unique_depths = np.array([])
@@ -242,6 +241,10 @@ def getMeanFromDifferentRandomSeeds():
             unique_depths = np.append(unique_depths, row['Depth'])
         if row['Features'] not in unique_features:
             unique_features = np.append(unique_features, row['Features'])
+
+    print(unique_trees)
+    print(unique_depths)
+    print(unique_features)
 
     # Grid search: Looking at the unique values and if they match it will summarize ACC, F1_score, Recall and Precision
     # Then take the summarized value and divide it with the number of rows found to get the mean value for that
@@ -266,7 +269,16 @@ def getMeanFromDifferentRandomSeeds():
 
         excel_sheet_with_mean = excel_sheet_with_mean.append(temp_df, ignore_index=True)
 
-    excel_sheet_with_mean.to_excel('pic/trial2_mean_value.xlsx', index=False, header=True)
+    excel_sheet_with_mean.to_excel('pic/trial3_mean_value.xlsx', index=False, header=True)
+
+def finalResult():
+    X_train, X_test, Y_train, Y_test = prepareDataset()
+
+    model = RandomForestClassifier(n_estimators=100, criterion='gini', max_features=18, max_depth=50
+                                   , n_jobs=-1)
+    model.fit(X_train, Y_train)
+    prediction_test = model.predict(X=X_test)
+    mcNemarsTest = pd.DataFrame({'actual':Y_test, 'predicted': prediction_test}, columns=['actual', 'predicted'])
+    mcNemarsTest.to_excel('test_result/mcNemars_Test1.xlsx', index=False, header=True)
 
 if __name__ == '__main__':
-    writeResultToExcel()
