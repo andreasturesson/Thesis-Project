@@ -71,13 +71,31 @@ class_names = ["Alexa_Majestic",
                                 "tinba"]
 
 def prepareDataset():
-    #df = pd.read_csv('../../../../Dataset/dataset_ensemble/6.0/6.5/train_multiclass.csv', low_memory=False)
-    df = pd.read_csv('../../../../Dataset/dataset_ensemble/train_dataset.csv', low_memory=False)
+    df = pd.read_csv('../../../../Dataset/dataset_ensemble/7.0/7.1/train_dataset.csv', low_memory=False)
     labels = np.array(df['label'])
     dataset = df.drop('label', axis=1)  # Saving feature names for later use
     feature_list = list(dataset.columns)  # Convert to numpy array
     dataset = np.array(dataset)
     return train_test_split(dataset, labels, test_size=0.2, random_state=420)
+
+#  X_train, X_test, Y_train, Y_test = train_test_split(dataset, labels, test_size=1, random_state=420)
+def prepareFinalTrainData():
+    df = pd.read_csv('../../../../Dataset/dataset_ensemble/7.0/7.1/train_dataset.csv', low_memory=False)
+    Y_train = np.array(df['label'])
+    dataset = df.drop('label', axis=1)  # Saving feature names for later use
+    X_train = np.array(dataset)
+    print(X_train)
+    print(Y_train)
+    return X_train, Y_train
+
+def prepareFinalTestData():
+    df = pd.read_csv('../../../../Dataset/dataset_ensemble/7.0/7.1/test_dataset.csv', low_memory=False)
+    Y_test = np.array(df['label'])
+    dataset = df.drop('label', axis=1)  # Saving feature names for later use
+    X_test = np.array(dataset)
+    print(X_test)
+    print(Y_test)
+    return X_test, Y_test
 
 def printShape(X_train, X_test, Y_train, Y_test):
     print('X_train Shape:', X_train.shape)
@@ -272,13 +290,34 @@ def getMeanFromDifferentRandomSeeds():
     excel_sheet_with_mean.to_excel('pic/trial3_mean_value.xlsx', index=False, header=True)
 
 def finalResult():
-    X_train, X_test, Y_train, Y_test = prepareDataset()
+    # Dataset 7.1
+    X_train, Y_train = prepareFinalTrainData()
+    X_test, Y_test = prepareFinalTestData()
 
-    model = RandomForestClassifier(n_estimators=100, criterion='gini', max_features=18, max_depth=50
-                                   , n_jobs=-1)
+    model = RandomForestClassifier(n_estimators=1000, criterion='gini', max_features=18, max_depth=40
+                                   , n_jobs=-1, random_state=13)
     model.fit(X_train, Y_train)
     prediction_test = model.predict(X=X_test)
     mcNemarsTest = pd.DataFrame({'actual':Y_test, 'predicted': prediction_test}, columns=['actual', 'predicted'])
-    mcNemarsTest.to_excel('test_result/mcNemars_Test1.xlsx', index=False, header=True)
+    mcNemarsTest.to_excel('test_result/mcNemars_final_result.xlsx', index=False, header=True)
+
+    cm = confusion_matrix(Y_test, prediction_test)
+    TP = cm[1][1]
+    FN = cm[1][0]
+    FP = cm[0][1]
+    TN = cm[0][0]
+
+    print('----------------------------------------------------------------------------------------')
+    print('Trees: ', 1000)
+    print('Depth: ', 40)
+    print('Features: ', 18)
+    print('Random_state: ', 13)
+    print('ACC: ', ((TP + TN) / (TP + FP + FN + TN)))
+    print('F1_score: ', (2 * (((TP / (TP + FP)) * (TP / (TP + FN))) / ((TP / (TP + FP)) + (TP / (TP + FN))))))
+    print('Precision: ', (TP / (TP + FP)))
+    print('Recall: ', (TP / (TP + FN)))
+    print('TP: %s  FN: %s  FP: %s  TN: %s' % (TP, FN, FP, TN))
+    print('----------------------------------------------------------------------------------------')
 
 if __name__ == '__main__':
+    finalResult()
