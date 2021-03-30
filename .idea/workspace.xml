@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e54df18a-64c2-4d57-bc34-b60903782ffe" name="Default Changelist" comment="Reorganized and archived old version of the random forest classifier.&#10;Added Readme files for different folders.&#10;Deleted test files." />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RESET_MODE" value="HARD" />
+  </component>
+  <component name="ProjectId" id="1qUBXL0vwNpRKtYjsfrqMPjK4B6" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\Jonathan\Thesis-Project\Enemble\Random Forest - current version(6)\Version 6" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e54df18a-64c2-4d57-bc34-b60903782ffe" name="Default Changelist" comment="" />
+      <created>1617124327654</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1617124327654</updated>
+    </task>
+    <task id="LOCAL−00001" summary="Reorganized and archived old version of the random forest classifier.&#10;Added Readme files for different folders.&#10;Deleted test files.">
+      <created>1617127143649</created>
+      <option name="number" value="LOCAL−00001" />
+      <option name="presentableId" value="LOCAL−00001" />
+      <updated>1617127143649</updated>
+    </task>
+    <task id="LOCAL−00002" summary="Reorganized and archived old version of the random forest classifier.&#10;Added Readme files for different folders.&#10;Deleted test files.">
+      <created>1617127274102</created>
+      <option name="number" value="LOCAL−00002" />
+      <option name="presentableId" value="LOCAL−00002" />
+      <updated>1617127274102</updated>
+    </task>
+    <task id="LOCAL−00003" summary="Reorganized and archived old version of the random forest classifier.&#10;Added Readme files for different folders.&#10;Deleted test files.">
+      <created>1617127713651</created>
+      <option name="number" value="LOCAL−00003" />
+      <option name="presentableId" value="LOCAL−00003" />
+      <updated>1617127713651</updated>
+    </task>
+    <task id="LOCAL−00004" summary="Reorganized and archived old version of the random forest classifier.&#10;Added Readme files for different folders.&#10;Deleted test files.">
+      <created>1617127864095</created>
+      <option name="number" value="LOCAL−00004" />
+      <option name="presentableId" value="LOCAL−00004" />
+      <updated>1617127864095</updated>
+    </task>
+    <task id="LOCAL−00005" summary="Revert &quot;Reorganized and archived old version of the random forest classifier. Added Readme files for different folders. Deleted test files.&quot;&#10;&#10;This reverts commit 191ffa6f">
+      <created>1617129065106</created>
+      <option name="number" value="LOCAL−00005" />
+      <option name="presentableId" value="LOCAL−00005" />
+      <updated>1617129065106</updated>
+    </task>
+    <task id="LOCAL−00006" summary="Reorganized and archived old version of the random forest classifiers&#10;Added readMe files for clarification &#10;Deleted old files(clean up)">
+      <created>1617130644804</created>
+      <option name="number" value="LOCAL−00006" />
+      <option name="presentableId" value="LOCAL−00006" />
+      <updated>1617130644804</updated>
+    </task>
+    <task id="LOCAL−00007" summary="Adding grid search data">
+      <created>1617130719733</created>
+      <option name="number" value="LOCAL−00007" />
+      <option name="presentableId" value="LOCAL−00007" />
+      <updated>1617130719733</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
+    <servers />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="main" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Reorganized and archived old version of the random forest classifier.&#10;Added Readme files for different folders.&#10;Deleted test files." />
+    <MESSAGE value="Revert &quot;Reorganized and archived old version of the random forest classifier. Added Readme files for different folders. Deleted test files.&quot;&#10;&#10;This reverts commit 191ffa6f" />
+    <MESSAGE value="Reorganized and archived old version of the random forest classifiers&#10;Added readMe files for clarification &#10;Deleted old files(clean up)" />
+    <MESSAGE value="Adding grid search data" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adding grid search data" />
+  </component>
+</project>
