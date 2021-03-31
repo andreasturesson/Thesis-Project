@@ -9,9 +9,10 @@ changing paths, file names and hyper-parameters.
 
 ## Functions:
 
-Note: Changing hyper-parameters are done manually inside functions.
-      Changing paths are done manually inside functions.
-      Changing the data set in manually done in prepareDataset()
+Note: 
+* Changing hyper-parameters are done manually inside functions.
+* Changing paths are done manually inside functions.
+* Changing the data set in manually done in prepareDataset()
 
 ### def prepareDataset()
     General function for loading a dataset from a csv file. Splits the data in 4
