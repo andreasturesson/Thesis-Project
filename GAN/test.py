@@ -25,12 +25,13 @@ STD = None
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 set_seed(13)  # 42 for training and 13 for holdout validation
 
+# Change these paths to dataset location
 train_inputs, train_labels, val_inputs, val_labels, \
 disc_val_inputs, disc_val_labels = load_trainset("Dataset/GANtrain_data_X.npy", "Dataset/GANtrain_data_y.npy",
                                                  "Dataset/train_data_X.npy", "Dataset/train_data_y.npy")
 train_dataloader, val_dataloader, disc_val_dataloader = data_loader(train_inputs, train_labels, val_inputs, val_labels,
                                                                     disc_val_inputs, disc_val_labels, BATCH_SIZE)
-
+# Change these paths to dataset location
 holdout_test_inputs, holdout_test_labels = load_holdout_set("Dataset/test_data_X.npy", "Dataset/test_data_y.npy")
 holdout_test_dataloader = data_loader_holdout(holdout_test_inputs, holdout_test_labels, BATCH_SIZE)
 
