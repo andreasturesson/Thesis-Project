@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/GAN_Thesis.iml" filepath="$PROJECT_DIR$/.idea/GAN_Thesis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/GAN_Thesis_new.iml" filepath="$PROJECT_DIR$/.idea/GAN_Thesis_new.iml" />
     </modules>
   </component>
 </project>
